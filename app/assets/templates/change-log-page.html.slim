@@ -1,0 +1,34 @@
+#change-log-main-wrapper
+  .row
+
+    .col-md-4.col-md-offset-4
+
+      h6.text-success
+        i.fa.fa-.fa-lg
+        b &nbsp;&nbsp;
+
+      form
+        .form-group
+          ui-select ng-model="log.doc" ng-disabled="us_disabled"
+            ui-select-match placeholder="RIS / PO" {{ $select.selected }}
+            ui-select-choices repeat="doc in ['-- SELECT ONE --', 'RIS', 'PO'] track by $index"
+              div ng-bind-html="doc | highlight: $select.search"
+
+        .panel.panel-default
+          .panel-body
+            .form-group
+              input.form-control ng-disabled="dn_input_disabled" style="text-transform:lowercase;" ng-model="log.doc_number" type="text" placeholder="number"
+
+        .panel.panel-default
+          .panel-body
+            .form-group
+              textarea.form-control ng-disabled="msg_textarea_disabled" ng-model="log.message" style="text-transform:lowercase;" placeholder="action..."
+
+        .panel.panel-default ng-show="edit_key"
+          .panel-body
+            h5.mg-x.text-success KEY : {{ edit_key }}
+
+        br
+
+        button.btn.btn-primary.btn-block.dir-generate-key ng-hide="edit_key" type="submit" href="#" Generate Key
+

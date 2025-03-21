@@ -1,0 +1,24 @@
+.row
+  .col-md-8.col-md-offset-2
+    h5.text-center
+      i.fa.fa-tags.fa-lg
+      | &nbsp;&nbsp;New Supplier
+
+    br
+
+    form
+      // supplier name
+      .panel.panel-default
+        .panel-body
+          .form-group id="model_name"
+            input.form-control ng-model="supplier.name" type="text" placeholder="Supplier Name"
+      // supplier address
+      .panel.panel-default
+        .panel-body
+          .form-group id="model_address"
+            input.form-control ng-model="supplier.address" type="text" placeholder="Address"
+
+      br
+      .form-group.text-center
+        button.dir-btn-save-supplier.btn.btn-primary.btn-block type="submit"
+          | Save Supplier

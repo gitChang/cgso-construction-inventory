@@ -1,0 +1,35 @@
+.row
+  .col-md-6
+    .panel.panel-default
+      .panel-body
+        .input-group
+          span.input-group-addon
+            i.fa.fa-search.fa-flip-horizontal.fa-lg
+          input.form-control ng-model="query" type="search" placeholder="po number..." autofocus=""
+
+.panel.panel-default
+  .panel-body
+    #no-more-tables
+      table.table.table-hover.cf
+        thead.cf
+          tr
+            th style="width:70px;" #.
+            th style="width:150px;" CTL NO.
+            th style="width:150px;" PO NO.
+            th PURPOSE NAME
+            th.text-right style="width:70px;" VIEW
+            th.text-right style="width:70px;" EDIT
+        tbody
+          tr ng-repeat="ep in endorsed_pos"
+            th data-title="#." {{ getRowNumber($first, $index) + '.'}}
+            td data-title="CTL No." {{ ep.control_number }}
+            td data-title="POW No." {{ ep.po_number }}
+            td data-title="Purpose" {{ ep.purpose }}
+            td.text-right data-title="View"
+              a.btn.btn-primary.btn-xs.view-endo-po href="#" data-endopoid="{{ep.endo_po_id}}"
+                | View
+            td.text-right data-title="Edit"
+              a.btn.btn-primary.btn-xs ui-sref="endorsement.po_edit({ id: ep.endo_po_id })" target="_blank" Edit
+
+.row.text-center ng-init="getEndorsedPos(1)"
+  paginate from="from_index" to="to_index" current_page="current_page" total="total_entries" action="getEndorsedPos(page)"

@@ -1,0 +1,177 @@
+class StockCardReportPdf < Prawn::Document
+
+  def initialize(stock_card)
+    super :page_size => "LEGAL", :page_layout => :landscape, :margin => [10,10,10,10]
+    @stock_card = stock_card
+    extracted_items = []
+    @stock_card[:items].to_a.each { |i| extracted_items << i }
+    @stock_card[:items] = extracted_items
+    create_report
+  end
+
+
+  def format_amt(amt)
+    return amt.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+  end
+
+
+  def create_report
+    image_ph_logo = "#{Rails.root}/public/images/philippine-logo.png"
+    image_tagum_logo = "#{Rails.root}/public/images/tagum-logo.png"
+
+    table([
+            [
+              { image: image_ph_logo, image_height: 60, image_width: 63 },
+              "Republic of the Philippines\nProvince of Davao del Norte\nCity of Tagum\n\nOFFICE OF THE CITY GENERAL SERVICES",
+              { image: image_tagum_logo, image_height: 60, image_width: 63 },
+            ]
+          ], width: 350, position: :center, cell_style: { size: 9, border_width: 0, align: :center })
+
+    move_down 40
+    bounds_width_val = bounds.width
+
+    table([ ['STOCK CARD INFORMATION', 'DETAILED ITEM TRANSACTION SUMMARY'] ], width: bounds.width, cell_style: { align: :center, font_style: :bold, size: 8, border_width: 0 }) do
+      style(columns(0), width: bounds_width_val - 341.5)
+    end
+
+    arr_detailed_item_trans_summary = [
+            [
+              'STOCK REPORT AS OF :', @stock_card[:stock_card_date],
+              'TOTAL NUMBER RECEIVED :', format_amt(@stock_card[:total_number_received])
+            ],
+            [
+              'NAME OF PROJECT :', @stock_card[:name_of_project],
+              'TOTAL NUMBER ISSUED :', format_amt(@stock_card[:total_number_issued])
+            ],
+            [
+              'PR NUMBER :', @stock_card[:pr_number],
+              'TOTAL STOCK BALANCE :', format_amt(@stock_card[:total_stock_balance])
+            ],
+            [
+              'POW REF. NUMBER :', @stock_card[:pow_number],
+              'TOTAL COST :', format_amt(@stock_card[:total_cost])
+            ],
+            [
+              'PROJECT ENGR/IN-CHARGE :', @stock_card[:in_charge],
+              'AVERAGE COST OF ALL ISSUANCE :', format_amt(@stock_card[:average_cost_of_all_issuance])
+            ],
+            [
+              '','',
+              'AVERAGE COST OF STOCK BALANCE :', format_amt(@stock_card[:average_cost_of_stock_balance])
+            ]
+          ]
+    table(arr_detailed_item_trans_summary, width: bounds.width, cell_style: { size: 7, border_width: 0.5 }) do
+      style(column(3), align: :right, font_style: :bold)
+      style(column(1), font_style: :bold)
+    end
+
+    move_down 20
+
+    #table([ ['DELIVERIES', 'ISSUANCES'] ], width: bounds.width, cell_style: { background_color: 'DDDDDD', align: :center, font_style: :bold, size: 8, border_width: 0.5 }) do
+    table([ ['DELIVERIES', 'ISSUANCES'] ], width: bounds.width, cell_style: { align: :center, font_style: :bold, size: 8, border_width: 0 }) do
+      style(columns(0), width: bounds_width_val - 325.5)
+    end
+
+    table(item_rows, width: bounds.width, cell_style: { inline_format: true }) do
+      style(row(0), font_style: :bold, background_color: 'F3F3F3', align: :center)
+      style(column(6..7), align: :right)
+      style(column(10..11), align: :right)
+      style(column(13), align: :center)
+
+      self.header = true
+      self.cell_style = { size: 7, border_width: 0.5 }
+    end
+
+    text "\u00a0\u00a0\u00a0\u00a0"
+    text "\u00a0\u00a0\u00a0\u00a0"
+
+    arr_signatories = [
+      ['Prepared by: ', 'Reviewed by: ', 'Approved by:'],
+      [@stock_card[:prepared_by], @stock_card[:reviewed_by], @stock_card[:approved_by]],
+      [@stock_card[:prepared_by_designation].upcase, @stock_card[:reviewed_by_designation].upcase, @stock_card[:approved_by_designation].upcase]
+    ]
+
+    pow_string = "#{@stock_card[:pow_number]}"
+    # Green page numbers 1 to 11
+    pow_string_options = {
+      :at => [bounds.right - 800, 5],
+      :width => 150,
+      :align => :left,
+      :size => 9
+    }
+    page_string = "page <page> of <total>"
+
+    page_string_options = {
+      :at => [bounds.right - 550, 5],
+      :width => 150,
+      :size => 9,
+      :align => :right,
+      :page_filter => :all,
+      :start_count_at => 1
+    }
+
+    bounding_box [bounds.left, bounds.bottom + 70], :width  => bounds.width do
+      table(arr_signatories, width: bounds.width, cell_style: { size: 8, border_width: 0 }) do
+        style(rows(1..2), height: 18)
+        style(rows(1), font_style: :bold, align: :center)
+        style(rows(2), align: :center)
+      end
+      move_down 10
+      number_pages pow_string, pow_string_options
+      number_pages page_string, page_string_options
+    end
+  end
+
+
+  def item_rows
+    stock_items = Array.new
+
+    @stock_card[:items].each do |item, i|
+      stock_items << [
+          item[:date_received].to_s,
+          item[:po_number],
+          item[:item_number],
+          item[:item_name],
+          format_amt(item[:received_quantity]),
+          item[:unit],
+          format_amt(item[:unit_cost]),
+          format_amt(item[:total_cost]),
+          format_amt("#{item[:sub_total_issued_quantity] ? item[:sub_total_issued_quantity] : item[:issued_quantity]}"),
+          item[:unit_out],
+          format_amt(item[:unit_cost_out]),
+          format_amt("#{item[:sub_total_cost_out] ? item[:sub_total_cost_out] : item[:total_cost_out]}"),
+          item[:date_issued].to_s,
+          "#{item[:withdrawn_by].nil? ? '' : (item[:withdrawn_by].first)}",
+          item[:ris_number],
+          "#{item[:sub_total_balance] ? item[:sub_total_balance] : item[:balance]}"
+      ]
+    end
+
+    stock_items << [
+                    '',
+                    '',
+                    '',
+                    '<b>GRAND TOTAL : </b>',
+                    "<b>#{format_amt(@stock_card[:total_number_received])}</b>",
+                    '',
+                    '',
+                    "<b>#{format_amt(@stock_card[:total_cost])}</b>",
+                    "<b>#{format_amt(@stock_card[:total_number_issued])}</b>",
+                    '',
+                    '',
+                    "<b>#{format_amt(@stock_card[:average_cost_of_all_issuance])}</b>",
+                    '',
+                    '',
+                    '',
+                    "<b>#{format_amt(@stock_card[:total_stock_balance])}</b>"
+                  ]
+
+    [[
+      'DATE RECEIVED', 'PO NUMBER', 'ITEM NO.', 'ITEM DESCRIPTION',
+      'RECEIPT QTY.', 'UNIT', 'UNIT COST', 'TOTAL COST', 'ISSUED QTY.',
+      'UNIT', 'UNIT COST', 'TOTAL COST', 'DATE ISSUED', 'WITHDRAWN BY',
+      'RIS NUMBER', 'BAL.'
+    ]] + stock_items
+  end
+
+end

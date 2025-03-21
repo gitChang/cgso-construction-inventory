@@ -1,0 +1,56 @@
+.row
+  .col-md-7
+    .panel.panel-default
+      .panel-body
+        .input-group
+          span.input-group-addon
+            i.fa.fa-search.fa-flip-horizontal.fa-lg
+          input.form-control ng-model="query" type="search" placeholder="search : value..." autofocus=""
+
+.panel.panel-default
+  .panel-body
+    #no-more-tables
+      table.table.table-hover.cf
+        thead.cf
+          // add supplier, received by (inspector)
+          tr
+            th #.
+            th style="min-width:100px;" PR
+            th style="min-width:100px;" POW
+            th style="min-width:100px;" PRS
+            th style="min-width:100px;" RIS
+            th DEPARTMENT
+            th style="min-width:200px;" IN-CHARGE
+            th PROJECT
+            th.text-center style="min-width:100px;" EDIT
+            th style="display:none;" BALANCE
+            th style="display:none;" TOTAL COST
+        tbody
+          tr.foo ng-repeat="project in projects track by $index"
+            th data-title="#." {{ getRowNumber($first, $index) + '.'}}
+            td data-title="PR Number"
+              a ui-sref="projects.view({ pr_number: project.pr_number })" target="_blank"
+                | {{ project.pr_number }}
+            td data-title="POW Number"
+              | {{ project.pow_number }}
+            td data-title="PRS Number"
+              a.text-success href="/download_prs_report_pdf/{{project.pr_number}}" target="_blank" ng-show="project.prs_number.length"
+                | {{ project.prs_number }}
+              a.text-success ui-sref="prs.compose({ pr_number: project.pr_number })" target="_blank" ng-show="!project.prs_number.length"
+                | CREATE
+            td data-title="RIS Number"
+              a.text-success ui-sref="ris.view({id: project.ris_savings_id })" target="_blank"
+                | {{ project.ris_savings_number }}
+            td data-title="Department" {{ project.department }}
+            td data-title="Project In-charge" {{ project.in_charge }}
+            td data-title="Name of Project"
+              a ui-sref="projects.po_collect({ pr_number: project.pr_number })" target="_blank"
+                | {{ project.purpose }}
+            td.text-center data-title="Edit"
+              a.btn.btn-primary.btn-xs ui-sref="projects.edit({ id: project.id })" target="_blank"
+                | EDIT
+            td data-title="balance" style="display:none;" {{ project.balance }}
+            td data-title="total_cost" style="display:none;" {{ project.total_cost }}
+
+.row.text-center ng-init="getProjects(1)"
+  paginate from="from_index" to="to_index" current_page="current_page" total="total_entries" action="getProjects(page)"

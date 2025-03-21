@@ -1,0 +1,12 @@
+// -- action topbar
+#topbar ng-controller="ActionTopbarController"
+  ng-include src="actionTopbarTpl"
+
+#notif-center.text-info.hidden style="font-weight:bold;"
+  i.fa.fa-hand-o-right.fa-lg
+  | &nbsp;&nbsp;
+  span.msg
+
+
+//-- main content
+.container-fluid id="main-content" ui-view=""

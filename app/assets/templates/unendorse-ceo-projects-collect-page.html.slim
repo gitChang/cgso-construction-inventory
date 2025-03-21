@@ -1,0 +1,35 @@
+.row
+  .col-md-6
+    .panel.panel-default
+      .panel-body
+        .input-group
+          span.input-group-addon
+            i.fa.fa-search.fa-flip-horizontal.fa-lg
+          input.form-control ng-model="query" type="search" placeholder="search : value..." autofocus=""
+
+.panel.panel-default
+  .panel-body
+    #no-more-tables
+      table.table.table-hover.cf
+        thead.cf
+          tr
+            th style="width:70px;" #.
+            th style="width:150px;" CTL NO.
+            th POW NOs.
+            th style="width:170px;" DATE ENDORSED/ACCTG.
+            th.text-right style="width:70px;" VIEW
+            th.text-right style="width:70px;" EDIT
+        tbody
+          tr ng-repeat="p in unendorse_ceo_projects"
+            th data-title="#." {{ getRowNumber($first, $index) + '.'}}
+            td data-title="CTL No." {{ p.control_number }}
+            td data-title="POW Nos." {{ p.pow_number }}
+            td data-title="Date Created" {{ p.created_at }}
+            td.text-right data-title="View"
+              a.btn.btn-primary.btn-xs.view-endo href="#" data-endoid="{{ep.endoid}}"
+                | View
+            td.text-right data-title="Edit"
+              a.btn.btn-primary.btn-xs ui-sref="endorsement.edit({ id: ep.endoid })" target="_blank" Edit
+
+.row.text-center ng-init="getUnendorseCeoProjects(1)"
+  paginate from="from_index" to="to_index" current_page="current_page" total="total_entries" action="getUnendorseCeoProjects(page)"

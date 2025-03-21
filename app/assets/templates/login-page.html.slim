@@ -1,0 +1,27 @@
+#login-main-wrapper
+
+  .container
+
+    .col-md-4.col-md-offset-4.col-xs-10.col-xs-offset-1
+
+      h1.text-center
+        //i.fa.fa-linux
+        img src="/images/tagum-logo.png"
+      h5.text-center.mg-x
+        b City General Services Office
+        br
+        small style="color:#999" Construction Inventory
+        br
+        small style="color:#999" System
+      br
+      br
+
+      p.text-center.text-danger.hidden id="login-failed-msg" EITHER USERNAME OR PASSWORD IS INVALID.
+
+      form
+        .form-group id="model_username"
+          input.form-control style="text-transform:none;" ng-model="credentials.username" type="text" placeholder="username"
+        .form-group id="model_password"
+          input.form-control style="text-transform:none;" ng-model="credentials.password" type="password" placeholder="password"
+        .form-group style="margin-top:30px;"
+          button.dir-btn-login.btn.btn-primary.btn-block.btn-lg type="submit" Login

@@ -1,0 +1,82 @@
+.row style="border-bottom:1px solid #bbb;font-size:120%"
+  .col-md-1.col-md-offset-3.text-center
+    img src="/images/philippine-logo.gif" style="width:100px;height:103px;"
+  .col-md-4
+    h6.text-center style="font-family:monospace;"
+      | Republic of the Philippines
+      br
+      | Province of Davao del Norte
+      br
+      | CITY GOVERNMENT OF TAGUM
+      br
+      br
+      | OFFICE OF THE CITY GENERAL SERVICES
+      br
+      small style="color:#888"
+        | Sitio Tipaz, Magugpo East, Tagum City Philippines
+        br
+        | Tel. Number : 216-6051
+
+  .col-md-1.text-center
+    img.hidden-sm src="/images/tagum-logo.png"
+
+br
+
+p
+  span
+    b CN : {{ project.cert_number }}
+  button.btn.btn-success.btn-sm.dir-download-cert.pull-right
+    i.fa.fa-download
+    | &nbsp;Get PDF
+
+.row style="font-size:120%"
+  .col-xs-10.col-xs-offset-1
+    h3.text-center style="font-family:monospace;" CERTIFICATION OF DELIVERY
+
+    br
+
+    p
+      | This is to certify that the following Purchase Order
+      b &nbsp;{{ project.purpose }} (POW No. {{ project.pow_number }})
+      | ,&nbsp;had been delivered to the GSO-Warehouse, to wit:
+
+    br
+
+    table.table.table-bordered
+      thead
+        tr
+          th No.
+          th P.O. Number
+          th Supplier
+          th Amount
+          th Date of Delivery
+      tbody
+        tr ng-repeat="po in project.pos"
+          td {{ $index + 1 + '.' }}
+          td {{ po.po_number }}
+          td {{ po.supplier }}
+          td.text-right {{ formatAmt(po.amount) }}
+          td {{ po.po_date }}
+
+    br
+
+    p This certification is being issued to {{ project.in_charge }}.
+    br
+    p Issued this {{ project.issued_date }} at Tagum City, Davao del Norte.
+
+    br
+    br
+    .row
+      .col-xs-5.col-xs-offset-7.text-center
+        b JALMAIDA L. JAMIRI-MORALES, MPA
+        br
+        | General Services Officer
+        br
+        br
+        p
+          img src="/images/Eagle-Wings.png" style="width:64px;opacity:0.4;"
+          | &nbsp;&nbsp;
+          img src="/images/Tagumpay.png" style="height:55px;opacity:0.4;"
+
+
+

@@ -1,0 +1,61 @@
+.row
+  .col-md-6.col-md-offset-3
+    h5.text-center
+      i.fa.fa-tags.fa-lg
+      | &nbsp;&nbsp;New Project
+
+    br
+
+    form
+      // project in-charge department
+      .form-group id="model_department_id"
+        .row
+          .col-sm-10
+            ui-select ng-model="project.department" ng-disabled="disabled"
+              ui-select-match placeholder="Department" {{ $select.selected }}
+              ui-select-choices repeat="department in departments track by $index" refresh="refreshDepartments($select.search)" refresh-delay="0"
+                div ng-bind-html="department | highlight: $select.search"
+          .col-sm-2
+            a.btn.btn-default.btn-block ui-sref="add_department" target="_blank"
+              i.fa.fa-plus
+
+      br
+
+      // project engr. / in-charge
+      .form-group id="model_project_in_charge_id"
+        ui-select ng-model="project.in_charge" ng-disabled="disabled"
+          ui-select-match placeholder="Project Engr. / In-charge" {{ $select.selected }}
+          ui-select-choices repeat="in_charge in in_charges track by $index" refresh="refreshInCharges($select.search)" refresh-delay="0"
+            div ng-bind-html="in_charge | highlight: $select.search"
+
+      br
+
+      // pr number
+      .panel.panel-default
+        .panel-body
+          .form-group id="model_pr_number"
+            input.form-control.dir-fmt-pr-num ng-model="project.pr_number" type="text" placeholder="PR number" maxlength="14"
+
+      br
+
+      // pow number
+      .panel.panel-default
+        .panel-body
+          .form-group id="model_pow_number"
+            input.form-control.dir-fmt-pow-num ng-model="project.pow_number" type="text" placeholder="POW number" maxlength="10"
+
+      br
+
+      // project name
+      .checkbox
+        label
+          input type="checkbox" ng-model="shel_ass" SHELTER ASSISTANCE PROGRAM
+      .panel.panel-default
+        .panel-body
+          .form-group id="model_purpose"
+            textarea.form-control ng-model="project.purpose" ng-readonly="shel_ass" placeholder="Project Name" style="height:150px;"
+
+      br
+      .form-group.text-center
+        button.dir-btn-save-project.btn.btn-primary.btn-block type="submit"
+          | Save Project

@@ -1,0 +1,54 @@
+.row
+  .col-md-8.col-md-offset-2
+    .panel.panel-default
+      .panel-body
+        input.form-control.push-pow-number ng-model="pow_number" style="text-transform:none" type="text" placeholder="Type pow/pr number then press enter..."
+
+br
+.row
+  .col-md-8.col-md-offset-2
+    .panel.panel-default
+      .panel-body
+        table.table
+          thead
+            tr
+              th style="width:130px" POW/PR NO.
+              th NAME OF PROJECT
+              th.text-right style="width:100px" TOTAL COST
+              th.text-center style="width:100px" REMOVE
+          tbody
+            tr ng-repeat="p in endo.projects"
+              td {{ p.pow_number }}
+              td {{ p.purpose }}
+              td.text-right {{ formatAmt(p.total_cost) }}
+              td.text-center
+                a.remove-pow href="#" REMOVE
+.row
+  .col-md-8.col-md-offset-2
+    .panel.panel-default
+      .panel-body
+        .form
+          .form-group
+            p
+              b.text-success RECIPIENT:
+            input.form-control style="text-transform:uppercase" placeholder="Juan dela Cruz, CPA" ng-model="endo.recipient.name"
+            input.form-control style="text-transform:none" placeholder="City Accountant" ng-model="endo.recipient.designation"
+          br
+          .form-group
+            p
+              b.text-success THRU:
+            input.form-control style="text-transform:uppercase" placeholder="Pedro Dimagiba" ng-model="endo.thru.name"
+            input.form-control style="text-transform:none" placeholder="Accountant III" ng-model="endo.thru.designation"
+          br
+          .form-group
+            p
+              b.text-success SENDER:
+            input.form-control style="text-transform:uppercase" placeholder="Jalmaida J. Morales, MPA" ng-model="endo.sender.name"
+            input.form-control style="text-transform:none" placeholder="General Services Officer" ng-model="endo.sender.designation"
+          br
+          .form-group
+            p
+              b.text-success CC:
+            textarea.form-control style="text-transform:none" placeholder="GSO-Admin" ng-model="endo.cc"
+          button.btn.btn-success.btn-lg.pull-right.create-endorsement
+            | CREATE ENDORSEMENT

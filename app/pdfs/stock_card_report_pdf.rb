@@ -1,0 +1,360 @@
+class StockCardReportPdf < Prawn::Document
+
+  def initialize(stock_card)
+    super :page_size => "FOLIO", :page_layout => :landscape, :margin => [15,15,20,15]
+    @stock_card = stock_card
+    extracted_items = []
+    @stock_card[:items].to_a.each { |i| extracted_items << i }
+    @stock_card[:items] = extracted_items
+
+    process_data
+    create_report
+  end
+
+
+  def format_amt(amt)
+    return amt.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+  end
+
+
+  def stock_item_new
+    obj = Hash.new
+
+    obj[:sub_total_receive_quantity] = 0.00
+    obj[:sub_total_total_cost] = 0.00
+    obj[:sub_total_issued_quantity] = 0.00
+    obj[:sub_total_total_cost_out] = 0.00
+    obj[:sub_total_balance] = 0.00
+    obj[:sub_total_balance_total_cost] = 0.00
+
+    return obj
+  end
+
+
+  def process_data
+    # RUNNING BALANCE PER PO
+    curr_bal = @stock_card[:items].first[:received_quantity] - @stock_card[:items].first[:issued_quantity]
+    curr_item_number = @stock_card[:items].first[:item_number]
+    @stock_card[:items].each_with_index do |item, index|
+      # RESET VALUES
+      if curr_item_number != item[:item_number]
+        item[:balance] = item[:received_quantity] - item[:issued_quantity]
+        curr_bal = item[:balance]
+        curr_item_number = item[:item_number]
+        next
+      end
+      # SET RUNNING BALANCE
+      item[:balance] = index == 0 ? curr_bal : curr_bal - item[:issued_quantity]
+      curr_bal = item[:balance]
+      curr_item_id = item[:item_id]
+    end
+
+    # SET SUB-TOTALS PER PO ITEM ROW
+    curr_item_number = @stock_card[:items].first[:item_number]
+    last_item_number = @stock_card[:items].last[:item_number]
+    first_item_number = @stock_card[:items].first[:item_number]
+    @stock_card[:items].each_with_index do |item, index|
+      if item[:item_number] != curr_item_number
+        # REASSIGN curr_item_id TO NEXT ITEM
+        curr_item_number = item[:item_number]
+
+        sub_total_obj = stock_item_new
+        sub_total_obj[:sub_total_received_quantity] = 0.00
+        sub_total_obj[:sub_total_total_cost] = 0.00
+        sub_total_obj[:sub_total_issued_quantity] = 0.00
+        sub_total_obj[:sub_total_total_cost_out] = 0.00
+        sub_total_obj[:sub_total_balance] = 0.00
+
+        @stock_card[:items].insert(index, sub_total_obj)
+      end
+
+      # APPEND SUB TOTAL ROW TO THE LAST ITEM ROW.
+      # IF ONE CLASS OF ITEM ONLY.
+      if first_item_number == last_item_number
+        sub_total_obj = stock_item_new
+        sub_total_obj[:sub_total_received_quantity] = 0.00
+        sub_total_obj[:sub_total_total_cost] = 0.00
+        sub_total_obj[:sub_total_issued_quantity] = 0.00
+        sub_total_obj[:sub_total_total_cost_out] = 0.00
+        sub_total_obj[:sub_total_balance] = 0.00
+
+        @stock_card[:items].insert(@stock_card[:items].count, sub_total_obj)
+        # END LOOP HERE
+        break
+      end
+
+      # APPEND SUB TOTAL ROW TO THE LAST ITEM ROW.
+      # MAKE SURE THERE ARE TWO CLASS OF ITEM ID's.
+      if item[:item_number] == last_item_number && last_item_number != first_item_number
+        sub_total_obj = stock_item_new
+        sub_total_obj[:sub_total_received_quantity] = 0.00
+        sub_total_obj[:sub_total_total_cost] = 0.00
+        sub_total_obj[:sub_total_issued_quantity] = 0.00
+        sub_total_obj[:sub_total_total_cost_out] = 0.00
+        sub_total_obj[:sub_total_balance] = 0.00
+
+        @stock_card[:items].insert(@stock_card[:items].count, sub_total_obj)
+        # END LOOP HERE
+        break
+      end
+    end
+
+    # SET VALUES FOR SUB TOTALS
+    curr_item_id = @stock_card[:items].first[:item_id]
+    curr_received_quantity = 0.00
+    curr_unit_cost = 0.00
+    curr_issued_quantity = 0.00
+    curr_total_cost_out = 0.00
+    curr_item_balance = 0.00
+    @stock_card[:items].each_with_index do |item, index|
+      # SET ACCUM. VALUES TO SUB TOTALS.
+      # UNLESS issued_quantity SINCE
+      # SUBTOTAL ROW IS FOUND.
+      unless item[:issued_quantity]
+        item[:sub_total_received_quantity] = curr_received_quantity
+        item[:sub_total_total_cost] = curr_unit_cost * curr_received_quantity
+        item[:sub_total_issued_quantity] = curr_issued_quantity
+        item[:sub_total_total_cost_out] = curr_total_cost_out
+        item[:sub_total_balance] = curr_item_balance
+        item[:sub_total_balance_total_cost] = curr_unit_cost * curr_item_balance
+        # RESET SUB TOTAL VALUES
+        curr_received_quantity = 0.00
+        curr_unit_cost = 0.00
+        curr_issued_quantity = 0.00
+        curr_total_cost_out = 0.00
+        curr_item_balance = 0.00
+        # SUB TOTAL HASH REACHED,
+        # PROCEED TO NEXT HASH.
+        next
+      end
+      curr_received_quantity = item[:received_quantity]
+      curr_unit_cost = item[:unit_cost]
+      curr_issued_quantity += item[:issued_quantity]
+      curr_total_cost_out += item[:total_cost_out]
+      curr_item_balance = item[:balance]
+    end
+
+    # SET GRAND TOTALS
+    grand_total = {
+      grand_total_received_quantity: 0.00,
+      grand_total_total_cost: 0.00,
+      grand_total_issued_quantity: 0.00,
+      grand_total_total_cost_out: 0.00,
+      grand_total_total_balance: 0.00,
+      grand_total_balance_total_cost: 0.00
+    }
+    @stock_card[:items].each do |item|
+      # UNLESS item_id SINCE SUBTOTAL ROW IS FOUND.
+      unless item[:item_number].present?
+        grand_total[:grand_total_received_quantity] += item[:sub_total_received_quantity]
+        grand_total[:grand_total_total_cost] += item[:sub_total_total_cost]
+        grand_total[:grand_total_issued_quantity] += item[:sub_total_issued_quantity]
+        grand_total[:grand_total_total_cost_out] += item[:sub_total_total_cost_out]
+        grand_total[:grand_total_total_balance] += item[:sub_total_balance]
+        grand_total[:grand_total_balance_total_cost] += item[:sub_total_balance_total_cost]
+      end
+    end
+
+    @stock_card[:total_number_received] = grand_total[:grand_total_received_quantity]
+    @stock_card[:total_number_issued] = grand_total[:grand_total_issued_quantity]
+    @stock_card[:total_stock_balance] = grand_total[:grand_total_total_balance]
+    @stock_card[:total_cost] = grand_total[:grand_total_total_cost]
+    @stock_card[:average_cost_of_all_issuance] = grand_total[:grand_total_total_cost_out]
+    @stock_card[:average_cost_of_stock_balance] = grand_total[:grand_total_balance_total_cost]
+
+    # APPLY inline_format to SUBTOTAL ROWS
+    @stock_card[:items].each do |item|
+      # UNLESS issued_quantity SINCE
+      # SUBTOTAL ROW IS FOUND.
+      unless item[:issued_quantity]
+        item[:sub_total_issued_quantity] = "<b>#{item[:sub_total_issued_quantity]}</b>"
+        item[:sub_total_total_cost_out] = "<b>#{item[:sub_total_total_cost_out]}</b>"
+        item[:sub_total_balance] = "<b>#{item[:sub_total_balance]}</b>"
+
+        # DELETE SUBTOTALS FOR: received_quantity, total_cost
+        item[:sub_total_received_quantity] = ''
+        item[:sub_total_total_cost] = ''
+      end
+    end
+
+    # HIDE DUPLICATE ROWS BY DELETING VALUES.
+    prev_item_number = @stock_card[:items].first[:item_number]
+    @stock_card[:items].each_with_index do |item, index|
+      next if index == 0
+      if item[:item_number].present?
+        if item[:item_number] == prev_item_number
+          item[:date_received] = ''
+          item[:po_number] = ''
+          item[:item_number] = ''
+          item[:item_name] = ''
+          item[:received_quantity] = ''
+          item[:unit] = ''
+          item[:unit_cost] = ''
+          item[:total_cost] = ''
+        end
+      end
+      # CACHE item_number
+      prev_item_number = item[:item_number] if item[:item_number].present?
+    end
+  end
+
+
+  def create_report
+    # DATA REPORT. DISPLAY PROCESSED DATA.
+    bounding_box([bounds.left, cursor], width: bounds.width) do
+      image_ph_logo = "#{Rails.root}/public/images/philippine-logo.png"
+      image_tagum_logo = "#{Rails.root}/public/images/tagum-logo.png"
+
+      table([
+              [
+                { image: image_ph_logo, image_height: 60, image_width: 63 },
+                "Republic of the Philippines\nProvince of Davao del Norte\nCity of Tagum\n\nOFFICE OF THE CITY GENERAL SERVICES",
+                { image: image_tagum_logo, image_height: 60, image_width: 63 },
+              ]
+            ], width: 350, position: :center, cell_style: { size: 9, border_width: 0, align: :center })
+
+      move_down 40
+      bounds_width_val = bounds.width
+
+      table([ ['STOCK CARD INFORMATION', 'DETAILED ITEM TRANSACTION SUMMARY'] ], width: bounds.width, cell_style: { align: :center, font_style: :bold, size: 8, border_width: 0 }) do
+        style(columns(0), width: bounds_width_val - 341.5)
+      end
+
+      arr_detailed_item_trans_summary = [
+              [
+                'STOCK REPORT AS OF :', @stock_card[:stock_card_date],
+                'TOTAL NUMBER RECEIVED :', format_amt(@stock_card[:total_number_received])
+              ],
+              [
+                'NAME OF PROJECT :', @stock_card[:name_of_project],
+                'TOTAL NUMBER ISSUED :', format_amt(@stock_card[:total_number_issued])
+              ],
+              [
+                'PR NUMBER :', @stock_card[:pr_number],
+                'TOTAL STOCK BALANCE :', format_amt(@stock_card[:total_stock_balance])
+              ],
+              [
+                'POW REF. NUMBER :', @stock_card[:pow_number],
+                'TOTAL COST :', format_amt(@stock_card[:total_cost])
+              ],
+              [
+                'PROJECT ENGR/IN-CHARGE :', @stock_card[:in_charge],
+                'AVERAGE COST OF ALL ISSUANCE :', format_amt(@stock_card[:average_cost_of_all_issuance])
+              ],
+              [
+                '','',
+                'AVERAGE COST OF STOCK BALANCE :', format_amt(@stock_card[:average_cost_of_stock_balance])
+              ]
+            ]
+      table(arr_detailed_item_trans_summary, width: bounds.width, cell_style: { size: 7, border_width: 0.5 }) do
+        style(column(3), align: :right, font_style: :bold)
+        style(column(1), font_style: :bold)
+      end
+
+      move_down 20
+
+      #table([ ['DELIVERIES', 'ISSUANCES'] ], width: bounds.width, cell_style: { background_color: 'DDDDDD', align: :center, font_style: :bold, size: 8, border_width: 0.5 }) do
+      table([ ['DELIVERIES', 'ISSUANCES'] ], width: bounds.width, cell_style: { align: :center, font_style: :bold, size: 8, border_width: 0 }) do
+        style(columns(0), width: bounds_width_val - 325.5)
+      end
+
+      table(item_rows, width: bounds.width, cell_style: { inline_format: true }) do
+        style(row(0), font_style: :bold, background_color: 'F3F3F3', align: :center)
+        style(column(6..7), align: :right)
+        style(column(10..11), align: :right)
+        style(column(13), align: :center)
+
+        self.header = true
+        self.cell_style = { size: 7, border_width: 0.5 }
+      end
+
+      move_down 20
+      arr_signatories = [
+        ['Prepared by: ', 'Reviewed by: ', 'Approved by:'],
+        ["\u00a0", "\u00a0", "\u00a0"],
+        [@stock_card[:prepared_by], @stock_card[:reviewed_by], @stock_card[:approved_by]],
+        [@stock_card[:prepared_by_designation].upcase, @stock_card[:reviewed_by_designation].upcase, @stock_card[:approved_by_designation].upcase]
+      ]
+
+      table(arr_signatories, width: bounds.width, cell_style: { size: 8, border_width: 0 }) do
+        style(rows(1..2), height: 18)
+        style(rows(2), font_style: :bold, align: :center)
+        style(rows(3), align: :center)
+      end
+    end
+
+    pow_string = "#{@stock_card[:pow_number]}"
+    pow_string_options = {
+      :at => [bounds.right - 800, -2],
+      :width => 150,
+      :align => :left,
+      :size => 9
+    }
+
+    page_string = "page <page> of <total>"
+    page_string_options = {
+      :at => [bounds.right - 550, -2],
+      :width => 150,
+      :size => 9,
+      :align => :right,
+      :page_filter => :all,
+      :start_count_at => 1
+    }
+
+    number_pages pow_string, pow_string_options
+    number_pages page_string, page_string_options
+  end
+
+
+  def item_rows
+    # FINALIZE ROWS TO BE DISPLAYED.
+    stock_items = Array.new
+    @stock_card[:items].each do |item, i|
+      stock_items << [
+          item[:date_received].to_s,
+          item[:po_number],
+          item[:item_number],
+          item[:item_name],
+          format_amt("#{item[:sub_total_received_quantity] ? item[:sub_total_received_quantity] : item[:received_quantity]}"),
+          item[:unit],
+          format_amt(item[:unit_cost]),
+          format_amt("#{item[:sub_total_total_cost] ? item[:sub_total_total_cost] : item[:total_cost]}"),
+          format_amt("#{item[:sub_total_issued_quantity] ? item[:sub_total_issued_quantity] : item[:issued_quantity]}"),
+          item[:unit_out],
+          format_amt(item[:unit_cost_out]),
+          format_amt("#{item[:sub_total_total_cost_out] ? item[:sub_total_total_cost_out] : item[:total_cost_out]}"),
+          item[:date_issued].to_s,
+          "#{item[:withdrawn_by].nil? ? '' : (item[:withdrawn_by].first)}",
+          item[:ris_number],
+          "#{item[:sub_total_balance] ? item[:sub_total_balance] : item[:balance]}"
+      ]
+    end
+
+    stock_items << [
+                    '',
+                    '',
+                    '',
+                    '<b>GRAND TOTAL : </b>',
+                    "<b>#{format_amt(@stock_card[:total_number_received])}</b>",
+                    '',
+                    '',
+                    "<b>#{format_amt(@stock_card[:total_cost])}</b>",
+                    "<b>#{format_amt(@stock_card[:total_number_issued])}</b>",
+                    '',
+                    '',
+                    "<b>#{format_amt(@stock_card[:average_cost_of_all_issuance])}</b>",
+                    '',
+                    '',
+                    '',
+                    "<b>#{format_amt(@stock_card[:total_stock_balance])}</b>"
+                  ]
+
+    [[
+      'DATE RECEIVED', 'PO NUMBER', 'ITEM NO.', 'ITEM DESCRIPTION',
+      'RECEIPT QTY.', 'UNIT', 'UNIT COST', 'TOTAL COST', 'ISSUED QTY.',
+      'UNIT', 'UNIT COST', 'TOTAL COST', 'DATE ISSUED', 'WITHDRAWN BY',
+      'RIS NUMBER', 'BAL.'
+    ]] + stock_items
+  end
+
+end

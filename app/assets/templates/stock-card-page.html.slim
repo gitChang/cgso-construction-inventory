@@ -1,0 +1,132 @@
+.row
+  .col-md-12
+    .row
+      .col-md-6
+        .panel.panel-default
+          .panel-body
+            h5 {{ item_details.item_description }}
+      .col-md-7 ng-show="item_details.photo_data"
+        img.img-thumbnail src="{{ item_details.photo_data || 'holder.js/100px480?text=Image not available' }}" style="max-width:100%;max-height:100%;"
+
+br
+br
+
+.row
+  .col-md-12
+    h5.text-success.mg-t-x
+      | INCOMING :
+    .row
+      .col-md-12
+        .panel.panel-default
+          .panel-heading
+            .row
+              .col-sm-1
+                p
+                  b FILTERS : &nbsp;
+              .col-sm-2
+                  input.form-control.input-sm ng-model="po_year" placeholder="PO YEAR"
+              .col-sm-2
+                input.form-control.input-sm ng-model="date_received" placeholder="DATE RECEIVED"
+              .col-sm-2
+                input.form-control.input-sm ng-model="in_charge" placeholder="IN-CHARGE"
+          #no-more-tables
+            table.table.table-hover.cf
+              thead.cf
+                tr
+                  th #.
+                  th IN-CHARGE
+                  th style="width: 300px;" PROJECT NAME
+                  th PO
+                  th DATE RECEIVED
+                  th QTY. IN
+                  th BAL.
+                  th.text-right COST
+                  th.text-right AMOUNT
+                  th SUPPLIER
+              tbody
+                tr ng-repeat="item in stock_card.incoming track by $index"
+                  td data-title="#." {{ $index + 1 + '.' }}
+                  td data-title="Project In-charge" {{ item.owner }}
+                  td data-title="Project Name"
+                    a href="/download_stock_card_pdf/{{ item.pr_number }}" target="_blank"
+                      | {{ item.purpose }}
+                  td data-title="PO Number"
+                    a ui-sref="po.view({ id: item.poid })" target="_blank"
+                      | {{ item.po_number }}
+                  td data-title="Date Received" {{ item.date_received | date: 'MMM. dd, yyyy' }}
+                  td data-title="Qty. In" {{ formatAmt(item.qty_in) }}
+                  td data-title="Balance" {{ formatAmt(item.balance) }}
+                  td.text-right data-title="Cost" {{ formatAmt(item.cost) }}
+                  td.text-right data-title="Amount" {{ formatAmt(item.qty_in * item.cost) }}
+                  td data-title="Supplier" {{ item.supplier }}
+              tfoot
+                tr
+                  td
+                    b TOTAL :
+                  th &nbsp;
+                  th &nbsp;
+                  th &nbsp;
+                  th &nbsp;
+                  th {{ formatAmt(stock_card.incoming_total_quantity) }}
+                  td &nbsp;
+                  td &nbsp;
+                  th.text-right {{ formatAmt(stock_card.incoming_total_cost) }}
+                  td &nbsp;
+
+    h5.text-success
+      | OUTGOING :
+    .row
+      .col-md-12
+        .panel.panel-default
+          //.panel-heading
+            .row
+              .col-sm-1
+                p
+                  b FILTERS : &nbsp;
+              .col-sm-2
+                  input.form-control.input-sm placeholder="POW NUMBER"
+              .col-sm-2
+                input.form-control.input-sm placeholder="RIS NUMBER"
+          #no-more-tables
+            table.table.table-hover.cf
+              thead.cf
+                tr
+                  th #.
+                  th POW
+                  th PR
+                  th RIS DATE
+                  th RIS
+                  th QTY. OUT
+                  th.text-right COST
+                  th.text-right AMOUNT
+                  th.text-center WITHDRAWN BY
+              tbody
+                tr ng-repeat="item in stock_card.outgoing track by $index"
+                  td data-title="#." {{ $index + 1 + '.' }}
+                  td data-title="POW Number" {{ item.pow_number }}
+                  td data-title="PR Number"
+                    a href="/download_stock_card_pdf/{{ item.pr_number }}" target="blank"
+                      | {{ item.pr_number }}
+                  td data-title="RIS Date" {{ item.ris_date }}
+                  td data-title="RIS Number"
+                    a ui-sref="ris.view({ id: item.risid })"
+                      | {{ item.ris_number }}
+                  td data-title="Qty. Out" {{ formatAmt(item.qty_out) }}
+                  td.text-right data-title="Cost" {{ formatAmt(item.cost) }}
+                  td.text-right data-title="Amount" {{ formatAmt(item.qty_out * item.cost) }}
+                  td.text-center data-title="Withdrawn by" {{ item.withdrawn_by }}
+              tfoot
+                tr
+                  th TOTAL &nbsp;:
+                  td &nbsp;
+                  td &nbsp;
+                  td &nbsp;
+                  td &nbsp;
+                  th {{ formatAmt(stock_card.outgoing_total_quantity) }}
+                  td &nbsp;
+                  th.text-right {{ formatAmt(stock_card.outgoing_total_cost) }}
+                  td &nbsp;
+
+.row
+  .col-md-12
+    h4.text-success Balance : {{ formatAmt(total_balance) }}

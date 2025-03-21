@@ -1,0 +1,52 @@
+.row
+  .col-md-8
+    ui-select ng-model="item.res" ng-disabled="disabled"
+      ui-select-match placeholder="Select an Item..." {{ $select.selected.name }}
+      ui-select-choices repeat="item in items track by $index" refresh="refreshItems($select.search)" refresh-delay="0"
+        div ng-bind-html="item.name | highlight: $select.search"
+  .col-md-4.text-right
+    button.btn.btn-success.btn-sm.dir-download-savings
+      i.fa.fa-download
+      | &nbsp;Get PDF
+
+br
+
+.panel.panel-default
+  .panel-body
+    .row
+      .col-md-12
+        #no-more-tables
+          table.table.table-hover.cf
+            thead.cf
+              tr
+                th style="width:80px;" ITEM #.
+                th style="min-width:250px;" ITEM DESCRIPTION
+                th style="min-width:250px;" OWNER
+                th style="width:150px;" PRS
+                th style="width:150px;" POW
+                th style="width:150px;" PO
+                th style="width:150px;" RIS
+                th style="width:100px;" COST
+                th style="width:100px;" BAL.
+            tbody
+              tr ng-repeat="item in savings.savings_items"
+                td data-title="Item No." {{ item.item_number + '.' }}
+                td data-title="Item Description" {{ item.item_name }}
+                td data-title="Owner" {{ item.owner }}
+                td data-title="PRS"
+                  a href="/download_prs_report_pdf/{{ item.pr_number }}" target="_blank"
+                    | {{ item.prs_number }}
+                td data-title="POW"
+                  a ui-sref="projects.view({ pow_number: item.pow_number, pr_number: item.pr_number })" target="blank"
+                    | {{ item.pow_number }}
+                td data-title="PO"
+                  a ui-sref="po.view({ id: item.poid })" target="blank"
+                    | {{ item.po_number }}
+                td data-title="RIS"
+                  a ui-sref="ris.view({ id: item.rid })" target="blank"
+                    | {{ item.ris_number }}
+                td data-title="Cost" {{ item.cost }}
+                td data-title="Balance" {{ item.balance }}
+
+.row.text-center ng-init="getSavingsItems(1)"
+  paginate from="from_index" to="to_index" current_page="current_page" total="total_entries" action="getSavingsItems(page)"

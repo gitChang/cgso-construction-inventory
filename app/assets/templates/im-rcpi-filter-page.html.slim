@@ -1,0 +1,13 @@
+.row
+  .col-md-12.text-center style="padding-top:50px;"
+    .col-sm-6.col-sm-offset-3
+      .panel.panel-default
+        .panel-body
+          h3.page-title.text-center
+            | Filter Parameters
+          br
+          .form-group
+            input.form-control type="text" placeholder="Year (i.e. 2016)" ng-model="parameters.year"
+          .form-group
+            a.btn.btn-success.rcpi-get-pdf href="#"
+              | GET PDF

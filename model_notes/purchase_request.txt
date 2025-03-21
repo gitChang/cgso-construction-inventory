@@ -1,0 +1,16 @@
+purchase_request:
+  - number: string
+  - date: datetime
+  - program_of_works_id: ref_int
+  - department_id: ref_int
+  - section_id: ref_int
+  - item_order: int
+  - quantity: float
+  - item_description_id: ref_int
+  - estimated_cost: float
+  - purpose: text
+  - project_location: ref_int
+  - requested_by_id: ref_int
+  - cash_availability_id: ref_int
+  - approved_by_id: ref_int
+  - user_id: ref_int

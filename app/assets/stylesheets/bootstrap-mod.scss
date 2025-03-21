@@ -1,0 +1,30 @@
+$font-family-sans-serif:  "Montserrat", "Tahoma", "Segoe UI", "Helvetica Neue", Helvetica, "Ubuntu", "Roboto", Arial, sans-serif;
+//$font-size-base: 13px;
+
+//$brand-primary: $brand-success;
+
+//$navbar-height: 50px;
+$navbar-inverse-brand-color: white;
+$navbar-inverse-brand-hover-color: lighten($navbar-inverse-brand-color, 15%);
+//$navbar-default-bg: lighten(rgb(174, 174, 177),10%);
+$navbar-inverse-color: #ffffff;
+$navbar-inverse-link-color: #ffffff;
+$navbar-inverse-link-hover-color: lighten($navbar-default-color, 15%);
+
+$navbar-default-bg: rgb(217, 215, 211);
+
+//$border-radius-base: 3px;
+//$border-radius-large: 0px;
+//$border-radius-sm: 0px;
+//$border-radius-xs: 0px;
+
+//$input-border-focus: $brand-success;
+
+//a:not(.navbar-brand) { color: $brand-success !important; }
+
+//$panel-default-heading-bg: #333;
+//$panel-default-text: $brand-primary;
+//$panel-default-border: lighten($panel-default-heading-bg, 3%);
+//$panel-footer-bg: $panel-default-heading-bg;
+
+//$grid-float-breakpoint: 300px;

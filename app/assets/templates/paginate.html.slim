@@ -1,0 +1,12 @@
+ul.list-inline.mg-b-x style="margin-left:2px;"
+  li
+    a href="#" ng-click="previousPage()" ng-class="{ 'disabled': from == 1 }"
+      i.fa.fa-chevron-circle-left.fa-2x
+  li
+    a href="#" ng-click="nextPage()" ng-class="{ 'disabled': to == total }"
+      i.fa.fa-chevron-circle-right.fa-2x
+
+p style="font-size:110%;font-weight:bold;"
+  | {{ to }} &nbsp;
+  | of &nbsp;
+  | {{ total }}

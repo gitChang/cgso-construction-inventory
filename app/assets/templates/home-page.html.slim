@@ -1,0 +1,80 @@
+#home-main-wrapper
+  // system menu
+  .row
+    .col-md-8.col-sm-10.col-md-offset-2.col-sm-offset-1
+      .row id="inv-components-wrapper"
+        .col-md-4
+          .panel.panel-default
+            .list-group
+              a.list-group-item.bg-primary ui-sref="projects"
+                p.mg-x.text-center
+                  i.fa.fa-clone.fa-2x
+                p.mg-x.text-center Projects
+        .col-md-4
+          .panel.panel-default
+            .list-group
+              a.list-group-item.bg-primary ui-sref="endorsement"
+                p.mg-x.text-center
+                  i.fa.fa-file-o.fa-2x
+                p.mg-x.text-center Endorsement
+        .col-md-4
+          .panel.panel-default
+            .list-group
+              a.list-group-item ui-sref="po"
+                p.mg-x.text-center
+                  i.fa.fa-shopping-cart.fa-2x
+                p.mg-x.text-center Purchase Order
+                //span.badge {{ badges.po_count }}
+        .col-md-4
+          .panel.panel-default
+            .list-group
+              a.list-group-item ui-sref="ris"
+                p.mg-x.text-center
+                  i.fa.fa-pencil-square-o.fa-2x
+                p.mg-x.text-center Req. Issued Slip
+                //span.badge {{ badges.ris_count }}
+        //.col-md-4
+        //  .panel.panel-default
+        //    .list-group
+        //      a.list-group-item.bg-primary ui-sref="stock-card"
+        //        p.mg-x.text-center
+        //          i.fa.fa-cubes.fa-2x
+        //          p.mg-x.text-center Stock Card
+        .col-md-4
+          .panel.panel-default
+            .list-group
+              a.list-group-item.bg-primary ui-sref="savings"
+                p.mg-x.text-center
+                  i.fa.fa-archive.fa-2x
+                p.mg-x.text-center Savings
+        .col-md-4
+          .panel.panel-default
+            .list-group
+              a.list-group-item.bg-primary ui-sref="im"
+                p.mg-x.text-center
+                  i.fa.fa-list-alt.fa-2x
+                p.mg-x.text-center Item Masterlist
+                //span.badge {{ badges.items_count }}
+        .col-md-4
+          .panel.panel-default
+            .list-group
+              a.list-group-item ui-sref="supplier"
+                p.mg-x.text-center
+                  i.fa.fa-truck.fa-flip-horizontal.fa-2x
+                p.mg-x.text-center Supplier
+                //span.badge {{ badges.suppliers_count }}
+        .col-md-4 ng-hide="limited"
+          .panel.panel-default
+            .list-group
+              a.list-group-item ui-sref="enroll"
+                p.mg-x.text-center
+                  i.fa.fa-users.fa-2x
+                p.mg-x.text-center Enroll a User
+                //span.badge {{ badges.users_count }}
+        .col-md-4 ng-hide="limited"
+          .panel.panel-default
+            .list-group
+              a.list-group-item ui-sref="change-log"
+                p.mg-x.text-center
+                  i.fa.fa-ticket.fa-2x
+                p.mg-x.text-center Change Log

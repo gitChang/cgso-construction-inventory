@@ -1,0 +1,5 @@
+users:
+  - name: int
+  - access_level: ref_int
+  - department_id: ref_int
+  - added_by_id: ref_int

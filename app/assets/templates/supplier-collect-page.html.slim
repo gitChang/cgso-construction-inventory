@@ -1,0 +1,36 @@
+.row
+  .col-md-6
+    .panel.panel-default
+      .panel-body
+        .input-group
+          span.input-group-addon
+            i.fa.fa-search.fa-flip-horizontal.fa-lg
+          input.form-control ng-model="supplierName" type="search" placeholder="search name..." autofocus=""
+
+.panel.panel-default
+  .panel-body
+    #no-more-tables
+      table.table.table-hover.cf
+        thead.cf
+          tr
+            th #.
+            th SUPPLIER NAME
+            th ADDRESS
+            th ng-hide="no_edit" EDIT
+            //th.text-center STOCK CARD
+        tbody
+          tr ng-repeat="supplier in suppliers track by $index"
+            th data-title="#." {{ getRowNumber($first, $index) + '.'}}
+            td data-title="Supplier Name"
+              a ui-sref="supplier.view({ id: supplier.id })"
+                | {{ supplier.name }}
+            td data-title="Address" {{ supplier.address }}
+            td data-title="Edit" ng-hide="no_edit"
+              a ui-sref="supplier.edit({id: {{supplier.id}} })" style="display:inline-block;"
+                | EDIT
+            //td.text-center data-title="View"
+            //  a href="#" style="display:inline-block;"
+                | VIEW
+
+.row.text-center ng-init="getSuppliers(1)"
+  paginate from="from_index" to="to_index" current_page="current_page" total="total_entries" action="getSuppliers(page)"

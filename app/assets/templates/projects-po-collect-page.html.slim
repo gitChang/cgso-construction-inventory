@@ -1,0 +1,45 @@
+.row
+  .col-md-6
+    table.table.table-bordered
+      tbody
+        tr
+          th style="width:170px;" PR Number
+          td {{ project.pr_number }}
+        tr
+          th style="width:170px;" POW Number
+          td {{ project.pow_number }}
+  .col-md-6
+    table.table.table-bordered
+      tbody
+        tr
+          th style="width:170px;" Project In-charge
+          td {{ project.in_charge }}
+        tr
+          th style="width:170px;" Purpose
+          td {{ project.purpose }}
+
+.panel.panel-default
+  #no-more-tables
+    table.table.table-hover.cf
+      thead.cf
+        tr
+          th #.
+          th PO NO.
+          th DATE RECEIVED
+          th.text-right TOTAL COST
+      tbody
+        tr ng-repeat="po in project.pos track by $index"
+          th data-title="#." {{ $index + 1 + '.'}}
+          td data-title="PO Number"
+            a ui-sref="po.view({ id: po.poid })"
+              | {{ po.po_number }}
+          td data-title="Date Received" {{ po.date_received | date: 'MMMM dd, yyyy' }}
+          td.text-right data-title="Total Cost" {{ formatAmt(po.total_cost) }}
+      tfoot
+        tr
+          td &nbsp;
+          td &nbsp;
+          td.text-right
+            b GRAND TOTAL :
+          td.text-right
+            b {{ formatAmt(grand_total_cost) }}

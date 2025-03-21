@@ -1,0 +1,44 @@
+.row
+  .col-md-6
+    .panel.panel-default
+      .panel-body
+        .input-group
+          span.input-group-addon
+            i.fa.fa-search.fa-flip-horizontal.fa-lg
+          input.form-control id="q-desc" ng-model="itemName" type="search" placeholder="search description..." autofocus=""
+  .col-md-6.text-right
+    a.btn.btn-success ui-sref="im.rcpi-filter"
+      i.fa.fa-download
+      | &nbsp;RPCI
+
+.panel.panel-default
+  .panel-body
+    #no-more-tables
+      table.table.table-hover.cf
+        thead.cf
+          tr
+            th #.
+            th ITEM DESCRIPTION
+            th UNIT
+            th SUPPLY
+            //th Cost
+            th ng-hide="no_edit" EDIT
+            th.text-center STOCK CARD
+            th style="width:80px;display:none;" ON HAND
+        tbody
+          tr ng-repeat="item in items track by $index" iid="{{ item.id }}"
+            td data-title="#." {{ getRowNumber($first, $index) + '.'}}
+            td data-title="Item Description" {{ item.name }}
+            td data-title="Unit" {{ item.unit }}
+            td data-title="Supply" {{ item.supplies }}
+            td data-title="Edit" ng-hide="no_edit"
+              a ui-sref="im.edit({id: item.id })" style="display:inline-block;" target="_blank"
+                | EDIT
+            td.text-center data-title="View"
+              a ui-sref="stock-card({ item_id: item.id })" style="display:inline-block;" target="_blank"
+                | VIEW
+            td style="display:none;"
+              input.text-center.form-control.input-sm.dir-on-hand maxlength="6" value="{{ item.on_hand_count }}"
+
+.row.text-center ng-init="getItems(1)"
+  paginate from="from_index" to="to_index" current_page="current_page" total="total_entries" action="getItems(page)"

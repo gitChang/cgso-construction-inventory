@@ -1,0 +1,40 @@
+.row
+  .col-md-6
+    .panel.panel-default
+      .panel-body
+        .input-group
+          span.input-group-addon
+            i.fa.fa-search.fa-flip-horizontal.fa-lg
+          input.form-control ng-model="query" type="search" placeholder="search : value..." autofocus=""
+
+.panel.panel-default
+  .panel-body
+    #no-more-tables
+      table.table.table-hover.cf
+        thead.cf
+          tr
+            th #.
+            th DEPARTMENT
+            th style="min-width:130px;" RIS NO.
+            th style="min-width:130px;" POW NO.
+            th style="min-width:130px;" RELEASED BY
+            th style="min-width:130px;" WITHDRAWN BY
+            th PURPOSE
+            th style="min-width:130px;" DATE
+        tbody
+          tr ng-repeat="ris in risItems"
+            th data-title="#." {{ getRowNumber($first, $index) + '.'}}
+            td data-title="Department" {{ ris.department }}
+            td data-title="RIS No."
+              a ui-sref="ris.view({id: ris.id })" target="_blank"
+                | {{ ris.ris_number }}
+            td data-title="POW No."
+              a ui-sref="projects.view({pr_number: ris.pr_number })" target="_blank"
+                | {{ ris.pow_number }}
+            td data-title="Released by" {{ ris.released_by }}
+            td data-title="Withdrawn by" {{ ris.withdrawn_by }}
+            td data-title="Purpose" {{ ris.purpose }}
+            td data-title="Date" {{ ris.date_issued | date: 'MMM. dd, yyyy' }}
+
+.row.text-center ng-init="getRisItems(1)"
+  paginate from="from_index" to="to_index" current_page="current_page" total="total_entries" action="getRisItems(page)"

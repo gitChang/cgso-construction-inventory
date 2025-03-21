@@ -1,0 +1,42 @@
+.row
+  .col-md-6
+    table.table.table-bordered
+      tbody
+        tr
+          th style="width:170px;" Supplier
+          td {{ supplier.name }}
+        tr
+          th style="width:170px;" Address
+          td {{ supplier.address }}
+  .col-md-6
+    table.table.table-bordered
+      tbody
+        tr
+          th style="width:170px;" Total Cost
+          td {{ formatAmt(supplier.total_cost) }}
+        tr
+          th style="width:170px;" &nbsp;
+          td &nbsp;
+
+#no-more-tables
+  table.table.table-hover.cf
+    thead.cf
+      tr
+        th #.
+        th PO #
+        th ITEM DESCRIPTION
+        th UNIT
+        th SUPPLY TYPE
+        th QUANTITY
+        th.text-right COST
+    tbody
+      tr ng-repeat="item in supplier.items track by $index"
+        th data-title="#." {{ $index + 1 + '.'}}
+        td data-title="PO Number"
+          a ui-sref="po.view({ id: item.poid })" target="blank"
+            | {{ item.po_number }}
+        td data-title="Item Description" {{  item.item_name }}
+        td data-title="Unit" {{ item.unit }}
+        td data-title="Supply Type" {{ item.supply_type }}
+        td data-title="Quantity" {{ formatAmt(item.quantity) }}
+        td.text-right data-title="Cost" {{ formatAmt(item.cost) }}

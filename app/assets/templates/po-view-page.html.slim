@@ -1,0 +1,222 @@
+.container
+
+  //.row
+    p.text-right
+      button.btn.btn-success.btn-sm.dir-download-po
+        i.fa.fa-download
+        | &nbsp;Get PDF
+
+  br
+
+  h3.text-center.mg-x PURCHASE ORDER
+  p.text-center.mg-x
+    b CITY GOVERNMENT OF TAGUM
+  p.text-center.mg-x
+    b LGU
+
+  br
+  br
+
+  p
+    a ui-sref="po.edit({ id: po.id })"
+      i.fa.fa-pencil.fa-flip-horizontal
+      | &nbsp; EDIT PO
+
+  #no-more-tables
+    table.table.table-bordered.cf
+      tbody
+        tr
+          td data-title="Supplier"
+            .row
+              .col-sm-2.hidden-xs Supplier
+              .col-sm-1.hidden-xs &#58;
+              .col-sm-9
+                b {{ po.supplier }}
+          td data-title="PO No."
+            .row
+              .col-sm-3.hidden-xs PO No.
+              .col-sm-1.hidden-xs &#58;
+              .col-sm-8
+                a ui-sref="po.stock-card({ poid: po.id })"
+                  b {{ po.po_number }}
+        tr
+          td data-title="Address"
+            .row
+              .col-sm-2.hidden-xs Address
+              .col-sm-1.hidden-xs &#58;
+              .col-sm-9
+                b {{ po.address }}
+          td data-title="PR No."
+            .row
+              .col-sm-3.hidden-xs PR No.
+              .col-sm-1.hidden-xs &#58;
+              .col-sm-8
+                a ui-sref="projects.view({ pr_number: po.pr_number })"
+                  b {{ po.pr_number }}
+        tr
+          td data-title="Date"
+            .row
+              .col-sm-2.hidden-xs Date
+              .col-sm-1.hidden-xs &#58;
+              .col-sm-9
+                b {{ po.date_issued | date:'MMMM dd, yyyy' }}
+          td data-title="POW Ref. No."
+            .row
+              .col-sm-3.hidden-xs POW Ref. No.
+              .col-sm-1.hidden-xs &#58;
+              .col-sm-8
+                b {{ po.pow_number }}
+        tr
+          td data-title="Department"
+            .row
+              .col-sm-2.hidden-xs Department
+              .col-sm-1.hidden-xs &#58;
+              .col-sm-9
+                b {{ po.department }}
+          td data-title="Mode of Proc."
+            .row
+              .col-sm-3.hidden-xs Mode of Proc.
+              .col-sm-1.hidden-xs &#58;
+              .col-sm-8
+                b {{ po.mode_of_procurement }}
+
+  .row
+    .col-md-12
+      h6.mg-x
+        b REMARKS : &nbsp;
+        | {{ po.remarks }}
+
+  br
+  br
+
+  .row
+    .col-md-12
+      p GENTLEMEN : &nbsp;&nbsp; Please furnish this office the following articles subject to the terms and condition contained herein:
+
+  #no-more-tables
+    table.table.table-bordered.cf
+      tbody
+        tr
+          td data-title="Place of Delivery"
+            .row
+              .col-sm-3.hidden-xs Place of Delivery
+              .col-sm-1.hidden-xs &#58;
+              .col-sm-8
+                b City General Services Office
+        //  td data-title=""
+        //    | &nbsp;
+        //tr
+        //  td data-title="Date of Delivery"
+        //    .row
+        //      .col-sm-3.hidden-xs Date of Delivery
+        //      .col-sm-1.hidden-xs &#58;
+        //      .col-sm-8
+        //        b 7 - 10 Working Days upon receipt of P.O.
+        //  td data-title="Payment Term"
+        //    .row
+        //      .col-sm-4.hidden-xs Payment Term
+        //      .col-sm-1.hidden-xs &#58;
+        //      .col-sm-7
+        //        b After Delivery
+
+  h6
+    b PURPOSE : &nbsp; {{ po.purpose }}
+
+  br
+  h6
+    b PARTICULARS
+
+  #no-more-tables
+    table.table.table-bordered.cf
+      thead
+        tr
+          th Item
+          th Quantity
+          //th Balance
+          th Unit
+          th Item Description
+          th Remarks
+          th Unit Cost
+          th Amount
+
+      tbody
+        tr ng-repeat="item in po.po_items track by $index"
+          td data-title="Item" {{ item.item_number + '.' }}
+          td data-title="Quantity" {{ formatAmt(item.quantity) }}
+          //td data-title="Balance" {{ formatAmt(item.balance) }}
+          td data-title="Unit" {{ item.unit }}
+          td data-title="Item Description" {{ item.name }}
+          td data-title="Remarks" {{ item.remarks }}
+          td.text-right.amt data-title="Unit Cost" {{ formatAmt(item.cost) }}
+          td.text-right.amt data-title="Amount" {{ formatAmt(item.amount) }}
+
+  .row
+    //.col-md-10
+    //  h6.mg-x
+    //    | Total Amount in Words : &nbsp;&nbsp;
+    //    b {{ totalAmountInWords }}
+
+    .col-md-2
+      h5.mg-x Php {{ totalAmount }}
+
+  br
+  br
+
+  h6
+    b INSPECTION & ACCEPTANCE REPORT
+
+  .row
+    .col-md-6
+      #no-more-tables
+        table.table.table-bordered.cf
+          tbody
+            tr
+              td data-title="Inspector"
+                .row
+                  .col-sm-3.hidden-xs Inspector
+                  .col-sm-1.hidden-xs &#58;
+                  .col-sm-8
+                    b {{ po.inspector }}
+            tr
+              td data-title="Delivery"
+                .row
+                  .col-sm-3.hidden-xs Delivery
+                  .col-sm-1.hidden-xs &#58;
+                  .col-sm-8
+                    b {{ po.completed_delivery }}
+            tr
+              td data-title="Date"
+                .row
+                  .col-sm-3.hidden-xs Date
+                  .col-sm-1.hidden-xs &#58;
+                  .col-sm-8
+                    b {{ po.date_of_delivery | date:'MMMM dd, yyyy' }}
+
+  br
+  hr style="border-top: dotted 1px;"
+  .row
+    .col-md-12 style="font-family:'Courier', monospace;"
+      b NOTE :&nbsp;
+      em In case of failure to make the full delivery within the time specified above, a penalty of one-tenth (1/10) of one percent for every day of delay shall be imposed.&nbsp;
+      | (RULE XXII, Sec. 68, Revise IRR of R.A. 9181)
+
+      br
+      br
+
+      | All Canvass Sheets/Bid Forms were attached to&nbsp;
+      b {{ po.supplier }}&nbsp;
+      br having the Biggest Amount of Award.
+
+  br
+  hr
+  p
+    b Record Logs :
+  .row
+    .col-md-12
+      ul
+        li ng-repeat="log in change_logs"
+          | date logged : {{ log.date_changed }}
+          | &nbsp; / &nbsp;
+          | &nbsp;action : {{ log.action }}
+          | &nbsp; / &nbsp;
+          | &nbsp;user : {{ log.user }}

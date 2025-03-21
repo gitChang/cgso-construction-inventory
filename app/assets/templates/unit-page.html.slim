@@ -1,0 +1,25 @@
+#unit-main-wrapper
+  .row
+    .col-md-4.col-md-offset-4
+      h5.text-center
+        i.fa.fa-tags.fa-lg
+        | &nbsp;&nbsp;Add Unit
+
+      br
+
+      form
+        // supplier name
+        .panel.panel-default
+          .panel-body
+            .form-group id="model_name"
+              input.form-control ng-model="unit.name" type="text" placeholder="Name"
+        // supplier address
+        .panel.panel-default
+          .panel-body
+            .form-group id="model_abbrev"
+              input.form-control ng-model="unit.abbrev" type="text" placeholder="Abbrev"
+
+        br
+        .form-group.text-center
+          button.dir-btn-save-unit.btn.btn-primary.btn-block type="submit"
+            | Save Unit

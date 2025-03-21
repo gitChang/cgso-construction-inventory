@@ -1,0 +1,37 @@
+.row
+  .col-md-6
+    .panel.panel-default
+      .panel-body
+        .input-group
+          span.input-group-addon
+            i.fa.fa-search.fa-flip-horizontal.fa-lg
+          input.form-control ng-model="query" type="search" placeholder="search : value..." autofocus=""
+
+.panel.panel-default
+  .panel-body
+    #no-more-tables
+      table.table.table-hover.cf
+        thead.cf
+          tr
+            th style="width:70px;" #.
+            th style="width:150px;" CTL NO.
+            th style="width:150px;" POW NO.
+            th style="width:150px;" PR NO.
+            th PROJECT NAME
+            th.text-right style="width:70px;" VIEW
+            th.text-right style="width:70px;" EDIT
+        tbody
+          tr ng-repeat="ep in endorsed_projects"
+            th data-title="#." {{ getRowNumber($first, $index) + '.'}}
+            td data-title="CTL No." {{ ep.control_number }}
+            td data-title="POW No." {{ ep.pow_number }}
+            td data-title="PR No." {{ ep.pr_number }}
+            td data-title="Project Name" {{ ep.purpose }}
+            td.text-right data-title="View"
+              a.btn.btn-primary.btn-xs.view-endo href="#" data-endoid="{{ep.endoid}}"
+                | View
+            td.text-right data-title="Edit"
+              a.btn.btn-primary.btn-xs ui-sref="endorsement.edit({ id: ep.endoid })" target="_blank" Edit
+
+.row.text-center ng-init="getEndorsedProjects(1)"
+  paginate from="from_index" to="to_index" current_page="current_page" total="total_entries" action="getEndorsedProjects(page)"

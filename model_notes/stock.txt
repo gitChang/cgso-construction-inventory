@@ -1,0 +1,5 @@
+stock:
+  - item_id: ref_int
+  - in: int
+  - out: int
+  - bal: int

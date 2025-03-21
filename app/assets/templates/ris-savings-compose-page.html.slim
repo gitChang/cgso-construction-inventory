@@ -1,0 +1,231 @@
+.row
+  .col-md-3
+    .panel.panel-primary
+      .panel-body
+        h5.text-primary.mg-x RIS No. {{ ris.ris_number }}
+
+.row
+  .col-md-3
+    .panel.panel-default
+      .panel-body
+        .checkbox
+          label.control-label
+            input ng-model="ris.savings" type="checkbox" &nbsp;Savings
+
+.row
+  .col-md-7
+    .panel.panel-default
+      .panel-body
+        .form-horizontal
+          .form-group.mg-x id="model_date_issued"
+            label.control-label.col-sm-3
+              | Date :
+            .col-sm-9
+              label.control-label.text-success style="font-weight:bold" {{ ris.date_issued | date:'MMMM dd, yyyy' }}
+              datetimepicker data-ng-model="ris.date_issued" data-datetimepicker-config="{ startView:'day', minView:'day' }" style="border:none;"
+
+.row
+  .col-md-7
+    .panel.panel-default
+      .panel-body
+        .form-horizontal
+          .form-group id="model_pow_number"
+            label.control-label.col-sm-3
+              | POW Ref. No. :
+            .col-sm-9
+              input.form-control ng-model="ris.pow_number" type="text"
+          .form-group id="model_pr_number"
+            label.control-label.col-sm-3
+              | PR No. :
+            .col-sm-9
+              input.form-control ng-model="ris.pr_number" type="text"
+
+.row
+  .col-md-7
+    .panel.panel-default
+      .panel-body
+        .form-horizontal
+          .form-group id="model_department_id"
+            label.control-label.col-sm-3
+              | Department :
+            .col-sm-9
+              h6 {{ ris.department }}
+
+
+.row
+  .col-md-7
+    .panel.panel-default
+      .panel-body
+        .form-horizontal
+          .form-group
+            label.control-label.col-sm-3
+              | Purpose :
+            .col-sm-9
+              h6 ng-bind="ris.purpose"
+
+//.row
+//  .col-md-7
+//    .panel.panel-default
+//      .panel-body
+//        .form-horizontal
+//          .form-group id="model_department_id"
+//            label.control-label.col-sm-3
+//              | Department :
+//            .col-sm-9
+//              ui-select ng-model="ris.department" ng-disabled="disabled"
+//                ui-select-match {{ $select.selected }}
+//                ui-select-choices repeat="department in departments track by $index" refresh="refreshDepartments($select.search)" refresh-delay="0"
+//                  div ng-bind-html="department | highlight: $select.search"
+//          .form-group id="model_department_division_id"
+//            label.control-label.col-sm-3
+//              | Section :
+//            .col-sm-9
+//              ui-select ng-model="ris.department_division" ng-disabled="disabled"
+//                ui-select-match {{ $select.selected }}
+//                ui-select-choices repeat="department_division in departmentDivisions track by $index"
+//                  div ng-bind-html="department_division | highlight: $select.search"
+
+.row
+  .col-md-7
+    .panel.panel-default
+      .panel-body
+        .form-horizontal
+          .form-group id="model_warehouseman_id"
+            label.control-label.col-sm-3
+              | Released by :
+            .col-sm-9
+              ui-select ng-model="ris.warehouseman" ng-disabled="disabled" reset-search-input="true"
+                ui-select-match {{ $select.selected }}
+                ui-select-choices repeat="warehouseman in warehousemen track by $index"
+                  div ng-bind-html="warehouseman | highlight: $select.search"
+          .form-group id="model_date_released"
+            label.control-label.col-sm-3
+              | Date Released :
+            .col-sm-9
+              label.control-label.text-success style="font-weight:bold" {{ ris.date_released | date:'MMMM dd, yyyy' }}
+              datetimepicker data-ng-model="ris.date_released" data-datetimepicker-config="{ startView:'day', minView:'day' }" style="border:none;"
+
+br
+
+h5 REQUISITION ISSUANCE
+
+.row
+  .col-md-12
+    .panel.panel-default id="model_ris_items"
+      .panel-body
+        #no-more-tables
+          table.table.table-hover.cf.mg-x
+            thead.cf
+              tr
+                th style="width:80px;" Item #
+                th Source
+                th Item Description
+                th style="width:80px;" Qty.
+                th style="width:130px;" Unit
+                th.text-right style="width:80px;" Cost
+                th.text-right style="width:80px;" Amount
+                th.text-center Remarks
+                th.text-center style="width:100px;" Remove
+            tbody
+              tr ng-repeat="item in ris.ris_items track by $index"  iid="{{ item.source_stock_id }}"
+                td data-title="Item No." {{ item.order_num || item.item_number  + '.' }}
+                td data-title="Source" {{ item.source }}
+                td data-title="Item Description" {{ item.item.name }}
+                td data-title="Quantity" {{ item.quantity }}
+                td data-title="Unit" {{ item.item.unit }}
+                td.text-right data-title="Cost" {{ item.cost }}
+                td.text-right data-title="Amount" {{ item.amount }}
+                td.text-center data-title="Remarks" {{ item.remarks }}
+                td.text-center data-title="Remove"
+                  a.dir-ris-remove-item.btn.btn-primary.btn-xs href="#" style="display:inline-block;"
+                    | Remove
+      .panel-footer
+        .row
+          .col-md-1
+            .form-group
+              h3.mg-x ng-bind="nextNumberIndicator + '.'"
+          .col-md-6
+            .form-group
+              .form-group id="model_item_id"
+                ui-select ng-model="selected.item" ng-disabled="disabled"
+                  ui-select-match placeholder="ITEM DESCRIPTION..." {{ $select.selected.item.name }}
+                  ui-select-choices repeat="item in items track by $index" refresh="refreshItems($select.search)" refresh-delay="0"
+                    div ng-bind-html="item.source + '&nbsp;&nbsp;' + '&#47;&nbsp;&nbsp;' + 'BAL. ' + item.quantity + ',' + item.item.name | highlight: $select.search"
+
+          .col-md-1
+            .form-group
+              input.form-control ng-model="selected.item.quantity" type="text" placeholder="Quantity..."
+          .col-md-2
+            .form-group
+              input.form-control ng-model="selected.item.remarks" type="text" placeholder="Remarks..."
+          .col-md-2.text-right
+            .form-group
+              a.dir-ris-add-item.btn.btn-primary href="#" ADD ITEM
+
+//.row
+//  .col-md-6
+//    .panel.panel-default
+//      .panel-body
+//        h5.mg-x
+//          i.fa.fa-angle-double-right
+//          | &nbsp;&nbsp;Php {{ totalAmount }}
+
+br
+
+h5 SIGNATORIES
+
+.row
+  .col-md-3
+    .panel.panel-default
+      .panel-body
+        .form-group
+          label Requested by :
+          input.form-control type="text" readonly="true" value="{{ ris.in_charge }}"
+  .col-md-3
+    .panel.panel-default
+      .panel-body
+        .form-group id="model_approved_by"
+          label Approved by :
+          ui-select ng-model="ris.approved_by" ng-disabled="disabled"
+            ui-select-match {{ $select.selected }}
+            ui-select-choices repeat="approver in getApprovers($select.search) | filter: $select.search" refresh="refreshItems($select.search)" refresh-delay="0"
+              div ng-bind="approver"
+  .col-md-3
+    .panel.panel-default
+      .panel-body
+        .form-group id="model_issued_by"
+          label Issued by :
+          ui-select ng-model="ris.issued_by" ng-disabled="disabled"
+            ui-select-match {{ $select.selected }}
+            ui-select-choices repeat="issuer in getIssuers($select.search) | filter: $select.search" refresh="refreshItems($select.search)" refresh-delay="0"
+              div ng-bind="issuer"
+  .col-md-3
+    .panel.panel-default
+      .panel-body
+        .form-group id="model_withdrawn_by"
+          label Received by :
+          ui-select ng-model="ris.withdrawn_by" ng-disabled="disabled"
+            ui-select-match {{ $select.selected }}
+            ui-select-choices repeat="receiver in getReceivers($select.search) | filter: $select.search" refresh="refreshItems($select.search)" refresh-delay="0"
+              div ng-bind="receiver"
+
+//--- actionbar bottom controls
+.navbar.navbar-default.navbar-fixed-bottom
+  .container
+    //-- nav items
+    ul.nav.navbar-nav
+      li
+        a.dir-save-ris href="#"
+          span
+            i.fa.fa-save.fa-2x
+          span
+            b &nbsp;&nbsp;SAVE
+      li
+        a href="#"
+          span
+            i.fa.fa-refresh.fa-2x
+          span
+            b &nbsp;&nbsp;RESET
+
+
+

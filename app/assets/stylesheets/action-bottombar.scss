@@ -1,0 +1,8 @@
+.navbar-fixed-bottom {
+  @extend .animated, .slideInDown;
+
+  i.fa {
+    @extend .fa-2x;
+    color: $brand-primary;
+  }
+}

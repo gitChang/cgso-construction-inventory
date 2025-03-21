@@ -1,0 +1,38 @@
+//--- actionbar topbar
+.navbar.navbar-inverse.navbar-fixed-top
+  .container-fluid
+    .navbar-header
+      //-- button toggle menu
+      button.navbar-toggle.collapsed data-toggle="collapse" data-target="#action-head-menu"
+        span.sr-only Toggle
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+
+      a.navbar-brand href="#"
+        <i class="fa fa-{{faIcon}}"></i>
+        | &nbsp;
+        | {{ inventoryElementName }}
+
+    //-- render doc header content here
+    .collapse.navbar-collapse id="action-head-menu"
+      //-- nav items
+      ul.nav.navbar-nav
+        li id="homie" ng-class="{hidden: !faIcon || faIcon == 'pie-chart'}"
+          a ui-sref="home" home
+        li ng-class="{active: routed('{{navigator.state}}')}" ng-repeat="navigator in navigators track by $index"
+          a ui-sref="{{navigator.state}}"
+            | {{navigator.name}}
+
+      //-- user actions
+      p.navbar-text.navbar-right style="margin-right:10px;"
+        a.navbar-link.action-logout href="#"
+          span style="margin-right:5px;"
+            i.fa.fa-eject.fa-lg
+          | logout
+
+      p.navbar-text.navbar-right
+        a.navbar-link href="#"
+          span style="margin-right:5px;"
+              i.fa.fa-user.fa-lg
+          | {{ active_user }}

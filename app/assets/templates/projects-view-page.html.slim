@@ -1,0 +1,91 @@
+br
+.row
+  .col-md-6.text-left
+    a.btn.btn-success.btn-sm ng-show="show_cert" href="/download_cert_of_delivery_report_pdf/{{ project.pr_number }}" target="_blank"
+      i.fa.fa-check
+      | &nbsp;CERTIFICATION
+  .col-md-6.text-right
+    button.btn.btn-success.btn-sm.dir-download-stock-card
+      i.fa.fa-download
+      | &nbsp;Get PDF
+
+br
+
+.row
+  .col-md-12
+    table.table.table-bordered
+      thead
+        tr
+          th style="width:150px;" POW NUMBER
+          th style="width:250px;" IN-CHARGE
+          th NAME OF PROJECT
+      tbody
+        tr
+          td {{ project.pow_number }}
+          td {{ project.in_charge }}
+          td {{ project.name_of_project }}
+
+br
+br
+
+.row style="color:#333;clear:both!important;"
+  .col-md-12
+    table.table.table-bordered.table-condensed style="page-break-after:always"
+      thead
+        tr
+          th style="width:150px;" DATE RECEIVED
+          th style="width:150px;" PO NUMBER
+          th style="width:100px;" ITEM NO.
+          th ITEM DESCRIPTION
+          th style="width:100px;" RECEIPT QTY.
+          th style="width:100px;" UNIT
+          th style="width:100px;" UNIT COST
+          th style="width:150px;" AMOUNT
+
+      tbody
+        tr style="page-break-after:always;" ng-repeat="p in project.items track by $index"
+          td data-title="Date Received" {{ p.date_received | date: 'MMMM dd, yyyy' | uppercase }}
+          td data-title="Reference PO Number"
+            a ui-sref="po.view({ id: p.poid })" {{ p.po_number }}
+          td data-title="Item No." {{ p.item_number }}
+          td data-title="Item Description" {{ p.item_name }}
+          td data-title="Receipt Qty." {{ formatAmt(p.received_quantity) }}
+          td data-title="Unit" {{ p.unit }}
+          td.text-right data-title="Unit Cost" {{ formatAmt(p.unit_cost) }}
+          td.text-right data-title="Amount" {{ formatAmt(p.total_cost) }}
+      tfoot
+        tr
+          td &nbsp;
+          td &nbsp;
+          td &nbsp;
+          td &nbsp;
+          td {{ formatAmt(project.total_quantity) }}
+          td &nbsp;
+          th Total AMT. =>
+          th.text-right {{ formatAmt(project.total_cost) }}
+
+br
+br
+
+//.row
+  .col-md-4
+    p
+      b Prepared By :
+    p.text-center
+      b {{ user.name }}
+      br
+      | {{ user.designation }}
+  .col-md-4
+    p
+      b Reviewed By :
+    p.text-center
+      b ROGER J. DOMPOL, MPA
+      br
+      | Public Officer IV
+  .col-md-4
+    p
+      b Approved By :
+    p.text-center
+      b JALMAIDA JAMIRI-MORALES, MPA
+      br
+      | General Services Officer

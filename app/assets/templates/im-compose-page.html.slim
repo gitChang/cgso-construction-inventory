@@ -1,0 +1,63 @@
+.row
+  .col-md-6.col-md-offset-1
+    h5.text-center
+      i.fa.fa-tags.fa-lg
+      | &nbsp;&nbsp;New Item
+
+    br
+
+    form
+      // item picture
+      .form-group
+        img.img-thumbnail.select-item-image src="/images/item-image-template.png" style="cursor:pointer;max-width:100%;max-height:100%;"
+        input id="fileInput" type="file" style="display:none;"
+      // item description
+      .panel.panel-default
+        .panel-body
+          .form-group id="model_name"
+            textarea.form-control ng-model="item.name" style="height:150px;"  placeholder="Article - Full Description"
+      // unit
+      .form-group id="model_unit_id"
+        .row
+          .col-sm-10
+            ui-select ng-model="item.unit" ng-disabled="disabled"
+              ui-select-match placeholder="Unit" {{ $select.selected }}
+              ui-select-choices repeat="unit in units track by $index" refresh="refreshUnits($select.search)" refresh-delay="0"
+                div ng-bind-html="unit | highlight: $select.search"
+          .col-sm-2
+            a.btn.btn-default.btn-block ui-sref="add_unit" target="_blank"
+              i.fa.fa-plus
+
+      // supply
+      .form-group id="model_supply_id"
+        .row
+          .col-sm-10
+            ui-select ng-model="item.supply" ng-disabled="disabled"
+              ui-select-match placeholder="Supply <Construction | Office>" {{ $select.selected }}
+              ui-select-choices repeat="supply in supplies track by $index"
+                div ng-bind-html="supply | highlight: $select.search"
+          .col-sm-2
+            a.btn.btn-default.btn-block ui-sref="add_supply" target="_blank"
+              i.fa.fa-plus
+      br
+      .form-group.text-center
+        button.dir-btn-add-item.btn.btn-primary.btn-block type="submit"
+          | Add Item
+
+  .col-md-4.col-md-offset-1
+    h5 &nbsp;
+
+    br
+    ul.list-inline
+      li style="margin-bottom:15px;"
+        button.btn.btn-default.btn-sm ng-click="copy_diameter()"
+          | &Oslash; - Diameter
+      li style="margin-bottom:15px;"
+        button.btn.btn-default.btn-sm ng-click="copy_squared()"
+          | &sup2; - Squared
+      li style="margin-bottom:15px;"
+        button.btn.btn-default.btn-sm ng-click="copy_cube()"
+          | &sup3; - Cube
+      li style="margin-bottom:15px;"
+        button.btn.btn-default.btn-sm ng-click="copy_degree()"
+          | &deg; - Degree

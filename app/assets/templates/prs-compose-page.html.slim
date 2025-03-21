@@ -1,0 +1,133 @@
+.row
+  p.text-center ng-show="prs.prs_number"
+    button.btn.btn-success.btn-sm.dir-download-prs
+      i.fa.fa-download
+      | &nbsp;Get PDF
+
+  .col-md-10.col-md-offset-1 style="border: 1px solid #ddd; padding: 30px; font-size:12px; background-color:#fff"
+    .row
+      .col-md-6.text-left
+        | POW No. :
+        b &nbsp;{{ pow_number }}
+      .col-md-6.text-right
+        | Control No. :
+        b &nbsp;&nbsp;{{ prs.prs_number || prs.autonumber_prs }}
+
+    br
+    br
+
+    h5.text-center.mg-t-x
+      b PROPERTY RETURN SLIP
+    br
+
+    p
+      | Name of Local Governtment Unit :
+      b &nbsp;&nbsp;CITY GOVERNMENT OF TAGUM
+    p
+      | Purpose :
+      b
+        |&nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;) Disposal &nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;) Repair &nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;) Returned to Stock &nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;) Other : &nbsp;_____________________________________
+
+    br
+
+    table.table.table-bordered.table-condensed
+      thead
+        tr
+          th.text-center Qty.
+          th.text-center Unit
+          th.text-center style="min-width:250px;" Description
+          th.text-center Property No.
+          th.text-center M.R. No.
+          th.text-center Name of End-User
+          th.text-center Unit Value
+          th.text-center Total
+      tbody
+        tr ng-repeat="material in prs.materials"
+          td {{ formatAmt(material.prs_quantity || material.quantity) }}
+          td {{ material.unit }}
+          td {{ material.item_description }}
+          td &nbsp;
+          td &nbsp;
+          td &nbsp;
+          td &nbsp;
+          td &nbsp;
+
+    h6.text-right.mg-x
+      | Total &nbsp;&nbsp;
+      i.fa.fa-long-arrow-right.fa-lg style="color:inherit;"
+      | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+    br
+    hr.mg-x
+
+    h5.text-center CERTIFICATION
+    br
+
+    .row
+      .col-xs-6
+        p
+          | I HEREBY CERTIFY that I have this _________ day of _____________________, 20_____ RETURNED to:
+        p.text-center.mg-x
+          b WAREHOUSE SECTION -
+          br
+          b OFFICE OF THE CITY GENERAL SERVICES
+        p.mg-x.text-center
+          b -
+        p.mg-x.text-center
+          | _______________________________
+          br
+          | the items/articles described above
+
+        br
+
+        p.mg-x.text-center
+          b {{ prs.project_in_charge }}
+          br
+          | {{ prs.designation }}
+        p.mg-x.text-center
+          | ______________________________
+          br
+          | Department Head
+          br
+          | (Name and Signature)
+
+      .col-xs-6 style="border-left:2px solid #ddd; margin-bottom:30px;"
+        p
+          | I HEREBY CERTIFY that I have this _________ day of _____________________, 20_____ RECEIVED from:
+
+        p.mg-x.text-center
+          b {{ prs.project_in_charge }}
+          br
+          | {{ prs.designation }}
+        p.mg-x.text-center
+          | ______________________________
+          br
+          | the items/articles described above
+
+        br
+        br
+
+        p.mg-x.text-center
+          b JALMAIDA JAMIRI-MORALES, MPA
+          br
+          | CITY GENERAL SERVICES OFFICER
+        p.mg-x.text-center
+          | ______________________________
+          br
+          | General Service Office
+          br
+          | (Name, Designation and Signature)
+
+//--- actionbar bottom controls
+.navbar.navbar-default.navbar-fixed-bottom ng-hide="prs.prs_number"
+  .container
+    //-- nav items
+    ul.nav.navbar-nav
+      li
+        a.dir-save-prs href="#"
+          span
+            i.fa.fa-save.fa-2x
+          span
+            b &nbsp;&nbsp;SAVE
+
+

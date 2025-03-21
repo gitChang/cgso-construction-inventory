@@ -1,0 +1,39 @@
+.row
+  .col-md-7
+    .panel.panel-default
+      .panel-body
+        .input-group
+          span.input-group-addon
+            i.fa.fa-search.fa-flip-horizontal.fa-lg
+          input.form-control ng-model="query" type="search" placeholder="search : value..." autofocus=""
+
+.panel.panel-default
+  .panel-body
+    #no-more-tables
+      table.table.table-hover.cf
+        thead.cf
+          tr
+            th #.
+            th style="min-width:130px;" PO NO.
+            th style="min-width:130px;" POW NO.
+            th SUPPLIER
+            th style="min-width:150px;" INSPECTOR
+            th PURPOSE
+            th style="min-width:130px;" DATE
+        tbody
+          tr ng-repeat="po in poItems"
+
+            th data-title="#." {{ getRowNumber($first, $index) + '.'}}
+            td data-title="PO No."
+              a ui-sref="po.view({ id: po.id })" style="display:inline-block;" target="_blank"
+                | {{ po.po_number }}
+            td data-title="POW No."
+              a ui-sref="projects.view({pr_number: po.pr_number })" target="_blank"
+                | {{ po.pow_number }}
+            td data-title="Supplier" {{ po.supplier }}
+            td data-title="Inspector" {{ po.inspector }}
+            td data-title="Purpose" {{ po.purpose }}
+            td data-title="Date" {{ po.date_issued | date: 'MMM. dd, yyyy' }}
+
+.row.text-center ng-init="getPoItems(1)"
+  paginate from="from_index" to="to_index" current_page="current_page" total="total_entries" action="getPoItems(page)"

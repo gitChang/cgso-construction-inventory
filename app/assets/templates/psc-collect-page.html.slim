@@ -1,0 +1,33 @@
+.row
+  .col-md-12
+    .row
+      .col-md-6.col-md-offset-3
+        .form-group
+          .input-group
+            span.input-group-addon
+              i.fa.fa-search.fa-flip-horizontal.fa-lg
+            input.form-control ng-model="powNumber" type="search" placeholder="Enter POW Ref. Number..." autofocus=""
+
+    br
+    br
+
+    .row
+      .col-md-12
+        #no-more-tables
+          table.table.table-hover.cf
+            thead.cf
+              // add supplier, received by (inspector)
+              tr
+                th NO.
+                th
+                  a href="#" POW NUMBER
+                th PROJECT IN-CHARGE
+                th NAME OF PROJECT
+            tbody
+              tr ng-repeat="project in projects track by $index"
+                td data-title="No." {{ $index + 1 + '.' }}
+                td data-title="POW Number"
+                  a ui-sref="psc.view({ pow_number: '{{project.pow_number}}' })"
+                    | {{ project.pow_number }}
+                td data-title="Project In-charge" {{ project.project_incharge }}
+                td data-title="Name of Project" {{ project.purpose }}

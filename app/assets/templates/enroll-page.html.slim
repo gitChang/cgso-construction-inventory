@@ -1,0 +1,75 @@
+#enroll-main-wrapper style="font-size:10px;"
+  .row id="inv-components-wrapper"
+
+    .col-md-4.col-md-offset-4
+      // enrollee
+      h6
+        i.fa.fa-building-o.fa-lg
+        b &nbsp;&nbsp;User's Info
+
+      form
+        // name
+        .panel.panel-default
+          .panel-body
+            .form-group id="model_name"
+              input.form-control ng-model="credentials.name" type="text" placeholder="Name ie. Juan dela Cruz"
+
+        // name
+        .panel.panel-default
+          .panel-body
+            .form-group id="model_designation"
+              input.form-control ng-model="credentials.designation" type="text" placeholder="Designation i.e. Data Encoder"
+
+        // department
+        .form-group id="model_department_id"
+          ui-select ng-model="credentials.department" ng-disabled="disabled"
+            ui-select-match placeholder="Department" {{ $select.selected }}
+            ui-select-choices repeat="department in departments track by $index" refresh="refreshDepartments($select.search)" refresh-delay="0"
+              div ng-bind-html="department | highlight: $select.search"
+
+        // division
+        .form-group id="model_department_division_id"
+          ui-select ng-model="credentials.department_division" ng-disabled="disabled"
+            ui-select-match placeholder="Division or Section" {{ $select.selected }}
+            ui-select-choices repeat="department_division in departmentDivisions track by $index"
+              div ng-bind-html="department_division | highlight: $select.search"
+
+        // credentials
+        br
+        h6 style="margin-bottom:20px;"
+          i.fa.fa-street-view.fa-lg
+          b &nbsp;&nbsp;System Credentials
+
+        .panel.panel-default
+          .panel-body
+            // username
+            .form-group id="model_username"
+              input.form-control style="text-transform:none;" ng-model="credentials.username" type="text" placeholder="username ie. cgso.juandc"
+
+            // password
+            .form-group id="model_password"
+              input.form-control ng-model="credentials.password" type="password" placeholder="Password"
+
+            // retype password
+            .form-group id="model_password_confirmation"
+              input.form-control ng-model="credentials.password_confirmation" type="password" placeholder="Retype password"
+
+        // role
+        br
+        h6 style="margin-bottom:20px;"
+          i.fa.fa-star-half-empty.fa-lg
+          b &nbsp;&nbsp;System Role
+          // user role
+        .form-group id="model_system_role_id"
+          ui-select ng-model="credentials.system_role" ng-disabled="disabled" reset-search-input="true"
+            ui-select-match placeholder="Spectator, Encoder or Administrator" {{ $select.selected }}
+            ui-select-choices repeat="role in systemRoles track by $index"
+              div ng-bind-html="role | highlight: $select.search"
+
+        // buttons
+        br
+        .btn-group.btn-group-justified.btn-group-lg role="group"
+          .btn-group role="group"
+            button.dir-btn-enroll.btn.btn-primary type="submit" href="#" Enroll
+          .btn-group role="group"
+            button.btn.btn-default type="button" href="#" Reset

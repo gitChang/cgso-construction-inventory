@@ -1,0 +1,35 @@
+.row
+  .col-md-6.col-md-offset-3
+    h5.text-center
+      i.fa.fa-tags.fa-lg
+      | &nbsp;&nbsp;New Project In-Charge
+
+    br
+
+    form
+      // project in-charge department
+      //.form-group id="model_department_id"
+      //  ui-select ng-model="in_charge.department" ng-disabled="disabled"
+      //    ui-select-match placeholder="Department" {{ $select.selected }}
+      //    ui-select-choices repeat="department in departments track by $index" refresh="refreshDepartments($select.search)" refresh-delay="0"
+      //      div ng-bind-html="department | highlight: $select.search"
+
+      //br
+
+      .panel.panel-default
+        .panel-body
+          .form-group id="model_name"
+            input.form-control ng-model="in_charge.name" type="text" placeholder="Name"
+
+      br
+
+      .panel.panel-default
+        .panel-body
+          .form-group id="model_designation"
+            input.form-control ng-model="in_charge.designation" type="text" placeholder="Designation"
+
+      br
+
+      .form-group.text-center
+        button.dir-btn-save-in-charge.btn.btn-primary.btn-block type="submit"
+          | Save

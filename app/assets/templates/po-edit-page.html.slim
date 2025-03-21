@@ -1,0 +1,260 @@
+//.row
+//  .col-md-4
+//    .panel.panel-default
+//      .panel-body
+//        .form-horizontal
+//          .form-group id="model_key"
+//            label.text-success.control-label.col-sm-5
+//             b PROVIDE MKEY :
+//            .col-sm-6
+//              input.form-control ng-model="po.genkey" type="text" style="text-transform:none;"
+
+h5 PO DETAILS
+.row
+  .col-md-7
+    .panel.panel-default
+      .panel-body
+        .form-horizontal
+          .form-group id="model_po_number"
+            label.control-label.col-sm-3
+              | PO No. :
+            .col-sm-9
+              input.form-control.dir-fmt-po-num ng-model="po.po_number" type="text" maxlength="13"
+          .form-group id="model_date_issued"
+            label.control-label.col-sm-3
+              | Date :
+            .col-sm-9
+              label.control-label.text-success style="font-weight:bold" {{ po.date_issued | date:'MMMM dd, yyyy' }}
+              datetimepicker data-ng-model="po.date_issued" data-datetimepicker-config="{ startView:'day', minView:'day' }" style="border:none;"
+
+br
+
+.row
+  .col-md-7
+    .panel.panel-default
+      .panel-body
+        .form-horizontal
+          .form-group id="model_pr_number"
+            label.control-label.col-sm-3
+              | PR No. :
+            .col-sm-9
+              input.form-control.dir-fmt-pr-num ng-model="po.pr_number" type="text" maxlength="14"
+          .form-group id="model_pow_number"
+            label.control-label.col-sm-3
+              | POW Ref. No. :
+            .col-sm-9
+              input.form-control.dir-fmt-pow-num ng-model="po.pow_number" type="text" maxlength="10"
+
+.row
+  .col-md-7
+    .panel.panel-default
+      .panel-body
+        .form-horizontal
+          .form-group id="model_department_id"
+            label.control-label.col-sm-3
+              | Department :
+            .col-sm-9
+              h6 {{ po.department }}
+
+.row
+  .col-md-7
+    .panel.panel-default
+      .panel-body
+        .form-horizontal
+          .form-group
+            label.control-label.col-sm-3
+              | Purpose :
+            .col-sm-9
+              h6 ng-bind="po.purpose"
+
+.row
+  .col-md-7
+    .panel.panel-default
+      .panel-body
+        .form-horizontal
+          .form-group id="model_remarks"
+            label.control-label.col-sm-3
+              | Remarks :
+            .col-sm-9
+              textarea.form-control ng-model="po.remarks" style="height:200px;"
+
+
+h5 INSPECTION AND ACCEPTANCE REPORT
+.row
+  .col-md-7
+    .panel.panel-default
+      .panel-body
+        .form-horizontal
+
+          .form-group id="model_iar_number"
+            label.control-label.col-sm-3
+              | IAR No. :
+            .col-sm-9
+              .row
+                .col-xs-10.pad-r-x
+                  //input.form-control ng-model="po.iar_number" type="text"
+                .col-xs-10
+                  h5.mg-x.text-success style="line-height:37px;"
+                    | {{ po.iar_number }}
+
+          .form-group id="model_date_of_delivery"
+            label.control-label.col-sm-3
+              | Date of Delivery :
+            .col-sm-9
+              label.control-label.text-success style="font-weight:bold" {{ po.date_of_delivery | date:'MMMM dd, yyyy' }}
+              datetimepicker data-ng-model="po.date_of_delivery" data-datetimepicker-config="{ startView:'day', minView:'day' }" style="border:none;"
+
+          .form-group id="model_complete"
+            label.control-label.col-sm-3 &nbsp;
+            .col-sm-9
+              ul.list-unstyled
+                li
+                  .checkbox
+                    label
+                      input ng-model="po.complete" type="radio" name="delivery" ng-value="true" Complete
+                li
+                  .checkbox
+                    label
+                      input ng-model="po.complete" type="radio" name="delivery" ng-value="false" Partial
+
+          .form-group id="model_inspector_id"
+            label.control-label.col-sm-3
+              | Inspector :
+            .col-sm-9
+              ui-select ng-model="po.inspector" ng-disabled="disabled"
+                ui-select-match {{ $select.selected }}
+                ui-select-choices repeat="inspector in inspectors track by $index"
+                  div ng-bind-html="inspector | highlight: $select.search"
+
+.row
+  .col-md-7
+    .panel.panel-default
+      .panel-body
+        .form-horizontal
+          .form-group id="model_supplier_id"
+            label.control-label.col-sm-3
+              | Supplier :
+            .col-sm-9
+              .row
+                .col-sm-10
+                  ui-select ng-model="po.supplier" ng-disabled="disabled"
+                    ui-select-match {{ $select.selected }}
+                    ui-select-choices repeat="supplier in suppliers track by $index" refresh="refreshSuppliers($select.search)" refresh-delay="0"
+                      div ng-bind-html="supplier | highlight: $select.search"
+                .col-sm-2.pad-l-x
+                  a.btn.btn-default ui-sref="supplier.compose" target="_blank"
+                    i.fa.fa-plus
+                    | &nbsp;&nbsp;New
+          .form-group id="model_mode_of_procurement_id"
+            label.control-label.col-sm-3
+              | Mode of Proc. :
+            .col-sm-9
+              .row
+                .col-sm-10
+                  ui-select ng-model="po.mode_of_procurement" ng-disabled="disabled"
+                    ui-select-match {{ $select.selected }}
+                    ui-select-choices repeat="mode in modes track by $index" refresh="refreshModes($select.search)" refresh-delay="0"
+                      div ng-bind-html="mode | highlight: $select.search"
+                .col-sm-2
+                  a.btn.btn-default.btn-block ui-sref="add_mode_of_proc" target="_blank"
+                    i.fa.fa-plus
+
+
+br
+
+h5 PURCHASED ITEMS
+.row
+  .col-md-12
+    .panel.panel-default id="model_po_items"
+      .panel-body
+        #no-more-tables
+          table.table.table-hover.cf.mg-x
+            thead.cf
+              tr
+                th style="width:80px;" Item #
+                th style="width:80px;" Qty.
+                th style="width:100px;" Unit
+                th Item Description
+                th style="width:150px;" Remarks
+                th.text-right style="width:130px;" Cost
+                th.text-right Amount
+                //th.text-center style="width:100px;"
+                  | Edit
+                th.text-center style="width:100px;"
+                  | Delete
+            tbody
+              tr ng-repeat="item in po.po_items track by $index" iid="{{ item.id }}" inum="{{ item.item_number }}"
+                td data-title="Item No." ng-bind="item.item_number + '.'"
+                td data-title="Quantity" {{ formatAmt(item.quantity) }}
+                td data-title="Unit" ng-bind="item.unit"
+                td data-title="Item Description" {{ item.item.name || item.name }}
+                td data-title="Remarks" {{ item.remarks }}
+                td.text-right data-title="Cost" {{ formatAmt(item.cost) }}
+                td.text-right data-title="Amount" {{ formatAmt(item.amount) }}
+                //td.text-center data-title="Edit"
+                  a.dir-po-edit-item.btn.btn-primary.btn-xs href="#" style="display:inline-block;"
+                    | Edit
+                td.text-center data-title="Delete"
+                  a.dir-po-edit-delete-item.btn.btn-primary.btn-xs href="#" style="display:inline-block;"
+                    | Delete
+      .panel-footer
+        .row
+          //.col-md-1
+          //  .form-group
+          //    h3.mg-x ng-bind="nextNumberIndicator + '.'"
+          .col-md-1
+            .form-group id="model_item_number"
+              input.form-control.text-center id="new_item_number" ng-model="selectedItem.item_number" type="text" placeholder="Item #."
+          .col-md-1
+            .form-group id="model_stock_in"
+              input.form-control id="new_quantity" ng-model="selectedItem.quantity" type="text" placeholder="Quantity"
+          .col-md-6
+            .form-group id="model_item_id"
+              ui-select ng-model="selectedItem.item" ng-disabled="disabled"
+                ui-select-match placeholder="Item Description..." {{ $select.selected.name || selectedItem.item.name }}
+                ui-select-choices repeat="item in items track by $index" refresh="refreshItems($select.search)" refresh-delay="0"
+                  div ng-bind-html="item.name | highlight: $select.search"
+          .col-md-2
+            .form-group id="model_cost"
+              input.form-control.text-right id="new_cost" ng-model="selectedItem.cost" type="text" placeholder="Unit Cost"
+          .col-md-2
+            .form-group id="model_remarks"
+              input.form-control id="new_remarks" ng-model="selectedItem.remarks" type="text" placeholder="Remarks"
+        .row
+          .col-md-12.text-right
+            .form-group.text-right
+              a.dir-po-edit-update-item.btn.btn-primary ng-show="selectedItem.edited == 'yes'" href="#" style="margin-right:10px;" title="Apply changes to item"
+                i.fa.fa-refresh.fa-lg
+              a.dir-po-edit-add-item.btn.btn-primary href="#" style="margin-right:10px;" title="Add item to selections"
+                i.fa.fa-plus
+              a.btn.btn-default ui-sref="im.compose" title="Create new item" target="_blank"
+                i.fa.fa-tags
+
+.row
+  .col-md-6
+    .panel.panel-default
+      .panel-body
+        h5.mg-x
+          i.fa.fa-angle-double-right
+          | &nbsp;&nbsp;Php {{ totalAmount }}
+
+//--- actionbar bottom controls
+.navbar.navbar-default.navbar-fixed-bottom
+  .container
+    //-- nav items
+    ul.nav.navbar-nav
+      li
+        a.dir-update-po href="#"
+          span
+            i.fa.fa-save
+          span
+            b &nbsp;&nbsp;UPDATE
+      li
+        a href="#"
+          span
+            i.fa.fa-refresh
+          span
+            b &nbsp;&nbsp;RESET
+
+
+

@@ -1,0 +1,23 @@
+#department-wrapper
+  .row
+    .col-md-4.col-md-offset-4
+      h5.text-center
+        i.fa.fa-tags.fa-lg
+        | &nbsp;&nbsp;Add Department
+
+      br
+
+      form
+        .panel.panel-default
+          .panel-body
+            .form-group id="model_name"
+              input.form-control ng-model="department.name" type="text" placeholder="Department Name"
+        .panel.panel-default
+          .panel-body
+            .form-group id="model_abbrev"
+              input.form-control ng-model="department.abbrev" type="text" placeholder="Department Short Name"
+
+        br
+        .form-group.text-center
+          button.dir-btn-save-department.btn.btn-primary.btn-block type="submit"
+            | Save Department

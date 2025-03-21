@@ -1,0 +1,171 @@
+.container
+  h3.text-center.mg-x REQUISITION ISSUED SLIP
+  p.text-center.mg-x
+    b CITY GOVERNMENT OF TAGUM
+  p.text-center.mg-x
+    b LGU
+
+  br
+  br
+
+  .row
+    p.text-right
+      button.btn.btn-success.btn-sm.dir-download-ris
+        i.fa.fa-download
+        | &nbsp;Get PDF
+      | &nbsp;&nbsp;
+      button.btn.btn-warning.btn-sm.dir-delete-ris href="#" ng-show="!ris.ris_items.length"
+        i.fa.fa-trash
+        | &nbsp;Delete
+
+  .row style="margin-bottom:10px;"
+    .col-md-12
+      a ui-sref="ris.edit({ id: ris.id })"
+        i.fa.fa-pencil.fa-flip-horizontal
+        | &nbsp; EDIT RIS
+      | &nbsp;&nbsp;
+      a ng-show="ris.savings" style="text-decoration:none"
+        .fa.fa-archive
+        | &nbsp;SAVINGS
+
+  #no-more-tables
+    table.table.table-bordered.cf
+      tbody
+        tr
+          td data-title="Department"
+            .row
+              .col-sm-2.hidden-xs Department
+              .col-sm-1.hidden-xs &#58;
+              .col-sm-9
+                b ng-bind="ris.department"
+          td data-title="RIS No."
+            .row
+              .col-sm-3.hidden-xs RIS No.
+              .col-sm-1.hidden-xs &#58;
+              .col-sm-8
+                b ng-bind="ris.ris_number"
+        tr
+          td data-title="Division"
+            .row
+              .col-sm-2.hidden-xs Division
+              .col-sm-1.hidden-xs &#58;
+              .col-sm-9
+                b ng-bind="ris.department_division"
+          td data-title="Date"
+            .row
+              .col-sm-3.hidden-xs POW No.
+              .col-sm-1.hidden-xs &#58;
+              .col-sm-8
+                a ui-sref="projects.view({ pr_number: ris.pr_number })" target="_blank"
+                  b ng-bind="ris.pow_number"
+        tr
+          td data-title="Division"
+            | &nbsp;
+          td data-title="Date"
+            .row
+              .col-sm-3.hidden-xs Date
+              .col-sm-1.hidden-xs &#58;
+              .col-sm-8
+                b ng-bind="ris.date_issued | date: 'MMMM dd, yyyy'"
+
+  h6.text-center
+    b REQUISITION ISSUANCE
+
+  #no-more-tables
+    table.table.table-bordered.cf
+      thead
+        tr
+          th ITEM NO.
+          th SOURCE
+          th UNIT
+          th DESCRIPTION
+          th QUANTITY
+          th ng-show="ris.savings" BAL.
+          th REMARKS
+
+      tbody
+        tr ng-repeat="item in ris.ris_items track by $index"
+          td data-title="ITEM NO." ng-bind="item.item_number"
+          td data-title="SOURCE"
+            a ng-show="item.poid" ui-sref="po.view({id: item.poid })" target="_blank" ng-bind="item.source"
+            a ng-show="item.risid" href="/download_prs_report_pdf/{{ ris.pr_number }}" target="_blank"
+              i.fa.fa-archive
+              | &nbsp;{{ item.source }}
+          td data-title="UNIT" ng-bind="item.unit"
+          td data-title="DESCRIPTION" ng-bind="item.name"
+          td data-title="QUANTITY" {{ formatAmt(item.quantity) }}
+          td ng-show="ris.savings" data-title="BALANCE" {{ formatAmt(item.balance) }}
+          td data-title="REMARKS" ng-bind="item.remarks"
+
+  h6
+    b ng-bind-html="'PURPOSE&nbsp;:&nbsp;&nbsp;' + ris.purpose"
+
+  br
+
+  h6
+    b RELEASING IN-CHARGE
+
+  .row
+    .col-md-6
+      #no-more-tables
+        table.table.table-bordered.cf
+          tbody
+            tr
+              td data-title="Released By"
+                .row
+                  .col-sm-3.hidden-xs Released By
+                  .col-sm-1.hidden-xs &#58;
+                  .col-sm-8
+                    b ng-bind="ris.released_by"
+            tr
+              td data-title="Date Released"
+                .row
+                  .col-sm-3.hidden-xs Date Released
+                  .col-sm-1.hidden-xs &#58;
+                  .col-sm-8
+                    b ng-bind="ris.date_released | date: 'MMMM dd, yyyy' | uppercase"
+
+
+  br
+  h6
+    b SIGNATORIES
+  br
+  .row
+    .col-md-3
+      p Requested by:
+      p.text-center
+        b &nbsp;&nbsp;{{ ris.in_charge }}
+        br
+        span {{ ris.in_charge_designation }}
+    .col-md-3
+      p Approved by:
+      p.text-center
+        b &nbsp;&nbsp;{{ ris.approved_by }}
+        br
+        span {{ ris.approved_by_designation }}
+    .col-md-3
+      p Issued by:
+      p
+        b &nbsp;&nbsp;{{ ris.issued_by }}
+        br
+        span {{ ris.issued_by_designation }}
+    .col-md-3
+      p Received by:
+      p
+        b &nbsp;&nbsp;{{ ris.withdrawn_by }}
+        br
+        span {{ ris.withdrawn_by_designation }}
+
+  br
+  hr
+  p
+    b Record Logs :
+  .row
+    .col-md-12
+      ul
+        li ng-repeat="log in change_logs"
+          | date logged : {{ log.date_changed }}
+          | &nbsp; / &nbsp;
+          | &nbsp;action : {{ log.action }}
+          | &nbsp; / &nbsp;
+          | &nbsp;user : {{ log.user }}

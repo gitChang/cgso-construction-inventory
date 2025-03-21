@@ -1,0 +1,75 @@
+.row
+  .col-md-6.col-md-offset-3
+    .panel.panel-default
+      .panel-body
+        .input-group
+          span.input-group-addon
+            i.fa.fa-search.fa-flip-horizontal.fa-lg
+          input.form-control.dir-fmt-pow-num style="text-transform:none;" ng-model="que_pow_number" type="text" placeholder="search pow number..."
+
+br
+
+.panel.panel-default ng-show="project.pow_number"
+  .panel-body
+    .row
+      .col-md-6
+        table.table.table-borderless
+          tbody
+            tr
+              th style="width:170px;"
+                | POW Number
+                span.pull-right
+                  | :
+              td {{ project.pow_number }}
+            tr
+              th style="width:170px;"
+                | PRS Control Number
+                span.pull-right
+                  | :
+              td
+                a href="/download_prs_report_pdf/{{ project.pr_number }}" target="_blank"
+                  | {{ project.prs_number }}
+      .col-md-6
+        table.table.table-borderless
+          tbody
+            tr
+              th style="width:170px;"
+                | Project In-charge
+                span.pull-right
+                  | :
+              td {{ project.in_charge }}
+            tr
+              th style="width:170px;"
+                | Project Name
+                span.pull-right
+                  | :
+              td {{ project.purpose }}
+
+.panel.panel-default ng-show="project.pow_number"
+  .panel-body
+    .row
+      .col-md-12
+        #no-more-tables
+          table.table.table-hover.cf
+            thead.cf
+              tr
+                th style="width:70px;" ITEM #.
+                th style="width:200px;" RIS
+                th style="width:200px;" SOURCE PO
+                th ITEM DESCRIPTION
+                th style="width:200px;" COST
+                th style="width:100px;" QTY.
+                th style="width:100px;" BAL.
+            tbody
+              tr ng-repeat="item in project.items"
+                td data-title="Item No." {{ item.item_number + '.' }}
+                td data-title="RIS"
+                  a ui-sref="ris.view({ id: item.rid })" target="blank"
+                    | {{ item.ris }}
+                td data-title="Source PO"
+                  a ui-sref="po.view({ id: item.poid })" target="blank"
+                    | {{ item.source_po }}
+                td data-title="Item Description" {{ item.item_name }}
+                td data-title="Cost" {{ formatAmt(item.cost) }}
+                td data-title="Qty." {{ formatAmt(item.quantity) }}
+                td data-title="Balance" {{ formatAmt(item.balance) }}

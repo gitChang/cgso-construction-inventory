@@ -1,0 +1,15 @@
+#home-main-wrapper {
+  .yang-bg {
+    background-color: $yang-color;
+  }
+
+  #inv-components-wrapper {}
+
+  .list-group-item {
+    padding: 35px;
+    font-size: 140%;
+
+    .badge { margin-top: 10px; }
+    span:not(.badge) { margin-left: 30px; }
+  }
+}
