@@ -18,3 +18,5 @@
 
 #Ignore .rbenv-vars
 .rbenv-vars
+
+shared/log/*.log
