@@ -67,4 +67,4 @@ Ensure you have the following installed:
 - Ensure PostgreSQL is running before starting the Rails server.
 
 ## License
-This project is licensed under the APACHE 2.0.
+This project is licensed under the  MIT License.
