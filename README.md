@@ -18,7 +18,7 @@ Ensure you have the following installed:
 - **SQLite3** (For development database)
 
 ## Samples Images
-![Alt text](assets/images/sample/construction-13.png)
+<img src="https://github.com/gitChang/cgso-construction-inventory/blob/main/app/assets/images/sample/construction-13.png" alt="Purchase Order" height="400">
 ![Alt text](assets/images/sample/construction-15.png)
 ![Alt text](assets/images/sample/construction-11.png)
 ![Alt text](assets/images/sample/construction-17.png)
