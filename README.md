@@ -68,8 +68,3 @@ Ensure you have the following installed:
 
 ## License
 This project is licensed under the APACHE 2.0.
-
----
-
-Let me know if you need further modifications! 🚀
-
