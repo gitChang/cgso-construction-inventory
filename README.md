@@ -17,6 +17,14 @@ Ensure you have the following installed:
 - **PostgreSQL** (For production database)
 - **SQLite3** (For development database)
 
+## Samples Images
+![Alt text](assets/images/sample/construction-13.png)
+![Alt text](assets/images/sample/construction-15.png)
+![Alt text](assets/images/sample/construction-11.png)
+![Alt text](assets/images/sample/construction-17.png)
+![Alt text](assets/images/sample/construction-9.png)
+
+
 ## Installation
 
 ### Setup
