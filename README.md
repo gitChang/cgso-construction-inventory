@@ -17,7 +17,7 @@ Ensure you have the following installed:
 - **PostgreSQL** (For production database)
 - **SQLite3** (For development database)
 
-## Samples Images
+## Sample Only Images
 <img src="https://github.com/gitChang/cgso-construction-inventory/blob/main/app/assets/images/sample/construction-13.png" alt="Purchase Order" height="400">
 <img src="https://github.com/gitChang/cgso-construction-inventory/blob/main/app/assets/images/sample/construction-15.png" alt="View Requisition Issued Slip" height="400">
 <img src="https://github.com/gitChang/cgso-construction-inventory/blob/main/app/assets/images/sample/construction-17.png" alt="Requisition Issued Slip PDF" height="400">
