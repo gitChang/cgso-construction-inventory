@@ -19,11 +19,10 @@ Ensure you have the following installed:
 
 ## Samples Images
 <img src="https://github.com/gitChang/cgso-construction-inventory/blob/main/app/assets/images/sample/construction-13.png" alt="Purchase Order" height="400">
-![Alt text](assets/images/sample/construction-15.png)
-![Alt text](assets/images/sample/construction-11.png)
-![Alt text](assets/images/sample/construction-17.png)
-![Alt text](assets/images/sample/construction-9.png)
-
+<img src="https://github.com/gitChang/cgso-construction-inventory/blob/main/app/assets/images/sample/construction-15.png" alt="View Requisition Issued Slip" height="400">
+<img src="https://github.com/gitChang/cgso-construction-inventory/blob/main/app/assets/images/sample/construction-17.png" alt="Requisition Issued Slip PDF" height="400">
+<img src="https://github.com/gitChang/cgso-construction-inventory/blob/main/app/assets/images/sample/construction-11.png" alt="Create Endorsement Letter" height="400">
+<img src="https://github.com/gitChang/cgso-construction-inventory/blob/main/app/assets/images/sample/construction-9.png" alt="Endorsement Letter" height="400">
 
 ## Installation
 
