@@ -1,3 +1,0 @@
-program_of_works:
-  - number: string
-  - project_engineer_id: ref_int

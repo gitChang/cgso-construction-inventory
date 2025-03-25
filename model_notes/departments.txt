@@ -1,3 +1,0 @@
-departments:
-  - name: string
-  - department_head_id: ref_int

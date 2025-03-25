@@ -1,4 +1,0 @@
-item_masterlist:
-  - description: string
-  - unit_id: ref_int
-  - latest_cost: float

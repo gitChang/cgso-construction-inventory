@@ -1,3 +1,0 @@
-department_heads:
-  - name: string
-  - designation: string

@@ -1,3 +1,0 @@
-user_edit_action_log:
-  - user_id: ref_int
-  - action: text
